@@ -1,0 +1,11 @@
+D:\Rider project\StatementWebApp\StatementWebApp.Core\bin\Debug\net8.0\StatementWebApp.Core.deps.json
+D:\Rider project\StatementWebApp\StatementWebApp.Core\bin\Debug\net8.0\StatementWebApp.Core.dll
+D:\Rider project\StatementWebApp\StatementWebApp.Core\bin\Debug\net8.0\StatementWebApp.Core.pdb
+D:\Rider project\StatementWebApp\StatementWebApp.Core\obj\Debug\net8.0\StatementWebApp.Core.GeneratedMSBuildEditorConfig.editorconfig
+D:\Rider project\StatementWebApp\StatementWebApp.Core\obj\Debug\net8.0\StatementWebApp.Core.AssemblyInfoInputs.cache
+D:\Rider project\StatementWebApp\StatementWebApp.Core\obj\Debug\net8.0\StatementWebApp.Core.AssemblyInfo.cs
+D:\Rider project\StatementWebApp\StatementWebApp.Core\obj\Debug\net8.0\StatementWebApp.Core.csproj.CoreCompileInputs.cache
+D:\Rider project\StatementWebApp\StatementWebApp.Core\obj\Debug\net8.0\StatementWebApp.Core.dll
+D:\Rider project\StatementWebApp\StatementWebApp.Core\obj\Debug\net8.0\refint\StatementWebApp.Core.dll
+D:\Rider project\StatementWebApp\StatementWebApp.Core\obj\Debug\net8.0\StatementWebApp.Core.pdb
+D:\Rider project\StatementWebApp\StatementWebApp.Core\obj\Debug\net8.0\ref\StatementWebApp.Core.dll

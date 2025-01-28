@@ -1,0 +1,11 @@
+{
+  "Version": 1,
+  "Hash": "sNAOSc2cOotAE3V2DtlOtvn1o+t39q7Rom9N4YGbzBU=",
+  "Source": "StatementWebApp.API",
+  "BasePath": "_content/StatementWebApp.API",
+  "Mode": "Default",
+  "ManifestType": "Build",
+  "ReferencedProjectsConfiguration": [],
+  "DiscoveryPatterns": [],
+  "Assets": []
+}

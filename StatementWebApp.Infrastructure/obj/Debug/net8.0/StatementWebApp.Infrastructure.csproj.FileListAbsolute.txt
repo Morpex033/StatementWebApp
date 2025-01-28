@@ -1,0 +1,15 @@
+D:\Rider project\StatementWebApp\StatementWebApp.Infrastructure\bin\Debug\net8.0\StatementWebApp.Infrastructure.deps.json
+D:\Rider project\StatementWebApp\StatementWebApp.Infrastructure\bin\Debug\net8.0\StatementWebApp.Infrastructure.dll
+D:\Rider project\StatementWebApp\StatementWebApp.Infrastructure\bin\Debug\net8.0\StatementWebApp.Infrastructure.pdb
+D:\Rider project\StatementWebApp\StatementWebApp.Infrastructure\bin\Debug\net8.0\StatementWebApp.Core.dll
+D:\Rider project\StatementWebApp\StatementWebApp.Infrastructure\bin\Debug\net8.0\StatementWebApp.Core.pdb
+D:\Rider project\StatementWebApp\StatementWebApp.Infrastructure\obj\Debug\net8.0\StatementWebApp.Infrastructure.csproj.AssemblyReference.cache
+D:\Rider project\StatementWebApp\StatementWebApp.Infrastructure\obj\Debug\net8.0\StatementWebApp.Infrastructure.GeneratedMSBuildEditorConfig.editorconfig
+D:\Rider project\StatementWebApp\StatementWebApp.Infrastructure\obj\Debug\net8.0\StatementWebApp.Infrastructure.AssemblyInfoInputs.cache
+D:\Rider project\StatementWebApp\StatementWebApp.Infrastructure\obj\Debug\net8.0\StatementWebApp.Infrastructure.AssemblyInfo.cs
+D:\Rider project\StatementWebApp\StatementWebApp.Infrastructure\obj\Debug\net8.0\StatementWebApp.Infrastructure.csproj.CoreCompileInputs.cache
+D:\Rider project\StatementWebApp\StatementWebApp.Infrastructure\obj\Debug\net8.0\Statemen.575402D4.Up2Date
+D:\Rider project\StatementWebApp\StatementWebApp.Infrastructure\obj\Debug\net8.0\StatementWebApp.Infrastructure.dll
+D:\Rider project\StatementWebApp\StatementWebApp.Infrastructure\obj\Debug\net8.0\refint\StatementWebApp.Infrastructure.dll
+D:\Rider project\StatementWebApp\StatementWebApp.Infrastructure\obj\Debug\net8.0\StatementWebApp.Infrastructure.pdb
+D:\Rider project\StatementWebApp\StatementWebApp.Infrastructure\obj\Debug\net8.0\ref\StatementWebApp.Infrastructure.dll

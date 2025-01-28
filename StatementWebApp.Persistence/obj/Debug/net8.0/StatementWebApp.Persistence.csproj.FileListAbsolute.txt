@@ -1,0 +1,17 @@
+D:\Rider project\StatementWebApp\StatementWebApp.Persistence\bin\Debug\net8.0\StatementWebApp.Persistence.deps.json
+D:\Rider project\StatementWebApp\StatementWebApp.Persistence\bin\Debug\net8.0\StatementWebApp.Persistence.runtimeconfig.json
+D:\Rider project\StatementWebApp\StatementWebApp.Persistence\bin\Debug\net8.0\StatementWebApp.Persistence.dll
+D:\Rider project\StatementWebApp\StatementWebApp.Persistence\bin\Debug\net8.0\StatementWebApp.Persistence.pdb
+D:\Rider project\StatementWebApp\StatementWebApp.Persistence\bin\Debug\net8.0\StatementWebApp.Core.dll
+D:\Rider project\StatementWebApp\StatementWebApp.Persistence\bin\Debug\net8.0\StatementWebApp.Core.pdb
+D:\Rider project\StatementWebApp\StatementWebApp.Persistence\obj\Debug\net8.0\StatementWebApp.Persistence.csproj.AssemblyReference.cache
+D:\Rider project\StatementWebApp\StatementWebApp.Persistence\obj\Debug\net8.0\StatementWebApp.Persistence.GeneratedMSBuildEditorConfig.editorconfig
+D:\Rider project\StatementWebApp\StatementWebApp.Persistence\obj\Debug\net8.0\StatementWebApp.Persistence.AssemblyInfoInputs.cache
+D:\Rider project\StatementWebApp\StatementWebApp.Persistence\obj\Debug\net8.0\StatementWebApp.Persistence.AssemblyInfo.cs
+D:\Rider project\StatementWebApp\StatementWebApp.Persistence\obj\Debug\net8.0\StatementWebApp.Persistence.csproj.CoreCompileInputs.cache
+D:\Rider project\StatementWebApp\StatementWebApp.Persistence\obj\Debug\net8.0\Statemen.3BF6EABC.Up2Date
+D:\Rider project\StatementWebApp\StatementWebApp.Persistence\obj\Debug\net8.0\StatementWebApp.Persistence.dll
+D:\Rider project\StatementWebApp\StatementWebApp.Persistence\obj\Debug\net8.0\refint\StatementWebApp.Persistence.dll
+D:\Rider project\StatementWebApp\StatementWebApp.Persistence\obj\Debug\net8.0\StatementWebApp.Persistence.pdb
+D:\Rider project\StatementWebApp\StatementWebApp.Persistence\obj\Debug\net8.0\StatementWebApp.Persistence.genruntimeconfig.cache
+D:\Rider project\StatementWebApp\StatementWebApp.Persistence\obj\Debug\net8.0\ref\StatementWebApp.Persistence.dll
