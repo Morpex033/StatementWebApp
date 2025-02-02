@@ -46,7 +46,7 @@ public class GradeController : ControllerBase
 
     [HttpPost]
     [SwaggerResponse(200, "Success", typeof(Grade))]
-    public async Task<IActionResult> AddGrade(CreateGradeDto grade, CancellationToken cancellationToken)
+    public async Task<IActionResult> AddGrade([FromBody]CreateGradeDto grade, CancellationToken cancellationToken)
     {
         var query = new AddGradeCommand()
         {
@@ -63,7 +63,7 @@ public class GradeController : ControllerBase
 
     [HttpPut("{id:guid}")]
     [SwaggerResponse(200, "Success", typeof(Grade))]
-    public async Task<IActionResult> UpdateGrade(UpdateGradeDto grade, CancellationToken cancellationToken)
+    public async Task<IActionResult> UpdateGrade([FromBody]UpdateGradeDto grade, CancellationToken cancellationToken)
     {
         var query = new UpdateGradeCommand()
         {

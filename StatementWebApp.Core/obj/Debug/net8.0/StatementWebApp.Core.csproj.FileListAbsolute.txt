@@ -9,3 +9,4 @@ D:\Rider project\StatementWebApp\StatementWebApp.Core\obj\Debug\net8.0\Statement
 D:\Rider project\StatementWebApp\StatementWebApp.Core\obj\Debug\net8.0\refint\StatementWebApp.Core.dll
 D:\Rider project\StatementWebApp\StatementWebApp.Core\obj\Debug\net8.0\StatementWebApp.Core.pdb
 D:\Rider project\StatementWebApp\StatementWebApp.Core\obj\Debug\net8.0\ref\StatementWebApp.Core.dll
+D:\Rider project\StatementWebApp\StatementWebApp.Core\obj\Debug\net8.0\StatementWebApp.Core.sourcelink.json

@@ -66,3 +66,4 @@ D:\Rider project\StatementWebApp\StatementWebApp.API\obj\Debug\net8.0\StatementW
 D:\Rider project\StatementWebApp\StatementWebApp.API\obj\Debug\net8.0\StatementWebApp.API.genruntimeconfig.cache
 D:\Rider project\StatementWebApp\StatementWebApp.API\obj\Debug\net8.0\ref\StatementWebApp.API.dll
 D:\Rider project\StatementWebApp\StatementWebApp.API\bin\Debug\net8.0\Swashbuckle.AspNetCore.Annotations.dll
+D:\Rider project\StatementWebApp\StatementWebApp.API\obj\Debug\net8.0\StatementWebApp.API.sourcelink.json

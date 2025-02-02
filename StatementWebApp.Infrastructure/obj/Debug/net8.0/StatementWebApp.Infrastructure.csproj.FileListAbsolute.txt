@@ -13,3 +13,4 @@ D:\Rider project\StatementWebApp\StatementWebApp.Infrastructure\obj\Debug\net8.0
 D:\Rider project\StatementWebApp\StatementWebApp.Infrastructure\obj\Debug\net8.0\refint\StatementWebApp.Infrastructure.dll
 D:\Rider project\StatementWebApp\StatementWebApp.Infrastructure\obj\Debug\net8.0\StatementWebApp.Infrastructure.pdb
 D:\Rider project\StatementWebApp\StatementWebApp.Infrastructure\obj\Debug\net8.0\ref\StatementWebApp.Infrastructure.dll
+D:\Rider project\StatementWebApp\StatementWebApp.Infrastructure\obj\Debug\net8.0\StatementWebApp.Infrastructure.sourcelink.json

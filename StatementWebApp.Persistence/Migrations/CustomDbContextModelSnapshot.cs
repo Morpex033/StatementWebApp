@@ -44,8 +44,9 @@ namespace StatementWebApp.Persistence.Migrations
                         .HasColumnType("uuid");
 
                     b.Property<DateTime>("Date")
-                        .ValueGeneratedOnAddOrUpdate()
-                        .HasColumnType("timestamp with time zone");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("timestamp with time zone")
+                        .HasDefaultValueSql("CURRENT_TIMESTAMP");
 
                     b.Property<Guid>("StudentId")
                         .HasColumnType("uuid");

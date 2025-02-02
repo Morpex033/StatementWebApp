@@ -12,8 +12,8 @@ using StatementWebApp.Persistence.Context;
 namespace StatementWebApp.Persistence.Migrations
 {
     [DbContext(typeof(CustomDbContext))]
-    [Migration("20250127055305_UpdateModelConfiguration")]
-    partial class UpdateModelConfiguration
+    [Migration("20250202163108_InitialCreate")]
+    partial class InitialCreate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -47,8 +47,9 @@ namespace StatementWebApp.Persistence.Migrations
                         .HasColumnType("uuid");
 
                     b.Property<DateTime>("Date")
-                        .ValueGeneratedOnAddOrUpdate()
-                        .HasColumnType("timestamp with time zone");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("timestamp with time zone")
+                        .HasDefaultValueSql("CURRENT_TIMESTAMP");
 
                     b.Property<Guid>("StudentId")
                         .HasColumnType("uuid");

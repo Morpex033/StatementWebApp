@@ -127,7 +127,7 @@ namespace StatementWebApp.Persistence.Migrations
                     TeacherId = table.Column<Guid>(type: "uuid", nullable: false),
                     StudentId = table.Column<Guid>(type: "uuid", nullable: false),
                     SubjectId = table.Column<Guid>(type: "uuid", nullable: false),
-                    Date = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
+                    Date = table.Column<DateTime>(type: "timestamp with time zone", nullable: false, defaultValueSql: "CURRENT_TIMESTAMP")
                 },
                 constraints: table =>
                 {

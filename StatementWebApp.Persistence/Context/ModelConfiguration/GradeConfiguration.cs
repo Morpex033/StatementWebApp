@@ -9,17 +9,22 @@ public class GradeConfiguration : IEntityTypeConfiguration<Grade>
     public void Configure(EntityTypeBuilder<Grade> builder)
     {
         builder
+            .Property(g => g.Date)
+            .HasColumnType("timestamp with time zone")
+            .HasDefaultValueSql("CURRENT_TIMESTAMP");
+
+        builder
             .Navigation(g => g.Teacher)
             .AutoInclude();
-        
+
         builder
             .Navigation(g => g.Student)
             .AutoInclude();
-        
+
         builder
             .Navigation(g => g.Subject)
             .AutoInclude();
-        
+
         builder
             .HasOne(g => g.Teacher)
             .WithMany()

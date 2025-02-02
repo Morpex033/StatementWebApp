@@ -30,6 +30,16 @@ public class Program
             .AddScoped<IGradeRepository, GradeRepository>()
             .AddScoped<IGroupRepository, GroupRepository>();
 
+        builder.Services.AddCors(options =>
+        {
+            options.AddPolicy("AllowOrigin", policy =>
+            {
+                policy.WithOrigins("http://localhost:4200")
+                    .AllowAnyMethod()
+                    .AllowAnyHeader();
+            });
+        });
+
         builder.Services.AddControllers(options =>
             options.Filters.Add<GlobalExceptionFilter>());
 
@@ -46,9 +56,13 @@ public class Program
 
         app.UseMiddleware<ErrorHandlingMiddleware>();
 
+        app.UseCors("AllowOrigin");
+
         app.UseRouting();
 
         app.MapControllerRoute("default", "/api/{controller}/{action=Index}/{id?}");
+
+        app.MapControllers();
 
         app.Run();
     }

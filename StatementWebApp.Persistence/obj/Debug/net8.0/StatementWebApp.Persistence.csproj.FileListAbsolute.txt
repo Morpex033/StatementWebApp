@@ -15,3 +15,4 @@ D:\Rider project\StatementWebApp\StatementWebApp.Persistence\obj\Debug\net8.0\re
 D:\Rider project\StatementWebApp\StatementWebApp.Persistence\obj\Debug\net8.0\StatementWebApp.Persistence.pdb
 D:\Rider project\StatementWebApp\StatementWebApp.Persistence\obj\Debug\net8.0\StatementWebApp.Persistence.genruntimeconfig.cache
 D:\Rider project\StatementWebApp\StatementWebApp.Persistence\obj\Debug\net8.0\ref\StatementWebApp.Persistence.dll
+D:\Rider project\StatementWebApp\StatementWebApp.Persistence\obj\Debug\net8.0\StatementWebApp.Persistence.sourcelink.json

@@ -87,13 +87,16 @@ public class GradeRepository : IGradeRepository
         return existingGrade;
     }
 
-    public async void DeleteGradeAsync(Guid id, CancellationToken cancellationToken)
+    public async Task DeleteGradeAsync(Guid id, CancellationToken cancellationToken)
     {
-        var grade = await _context.Grades.SingleOrDefaultAsync(g => g.Id == id, cancellationToken: cancellationToken) ??
-                    throw new NotFoundException("Grade not found");
+        var grade = await _context.Grades.SingleOrDefaultAsync(g => g.Id == id, cancellationToken);
+        if (grade == null)
+        {
+            throw new NotFoundException("Grade not found");
+        }
 
         _context.Grades.Remove(grade);
-
         await _context.SaveChangesAsync(cancellationToken);
     }
+
 }

@@ -15,7 +15,7 @@ public class DeleteGradeCommandHandler : IRequestHandler<DeleteGradeCommand, Uni
 
     public async Task<Unit> Handle(DeleteGradeCommand request, CancellationToken cancellationToken)
     { 
-        _repository.DeleteGradeAsync(request.Id, cancellationToken);
+        await _repository.DeleteGradeAsync(request.Id, cancellationToken);
 
         return Unit.Value;
     }

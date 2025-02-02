@@ -23,8 +23,8 @@ public class Grade
 
     public Subject Subject { get; set; }
 
-    [DatabaseGenerated(DatabaseGeneratedOption.Computed)]
-    public DateTime Date { get; set; }
+    [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+    public DateTime Date { get; }
 
     public Grade()
     {
