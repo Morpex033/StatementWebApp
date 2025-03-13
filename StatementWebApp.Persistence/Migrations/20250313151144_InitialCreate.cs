@@ -12,7 +12,7 @@ namespace StatementWebApp.Persistence.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
-                name: "Departments",
+                name: "Institutes",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
@@ -20,7 +20,19 @@ namespace StatementWebApp.Persistence.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Departments", x => x.Id);
+                    table.PrimaryKey("PK_Institutes", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Statements",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uuid", nullable: false),
+                    Index = table.Column<string>(type: "text", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Statements", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -36,6 +48,86 @@ namespace StatementWebApp.Persistence.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Teachers",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uuid", nullable: false),
+                    FirstName = table.Column<string>(type: "text", nullable: false),
+                    LastName = table.Column<string>(type: "text", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Teachers", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Departments",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uuid", nullable: false),
+                    Name = table.Column<string>(type: "text", nullable: false),
+                    InstituteId = table.Column<Guid>(type: "uuid", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Departments", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Departments_Institutes_InstituteId",
+                        column: x => x.InstituteId,
+                        principalTable: "Institutes",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "SubjectTeacher",
+                columns: table => new
+                {
+                    SubjectsId = table.Column<Guid>(type: "uuid", nullable: false),
+                    TeachersId = table.Column<Guid>(type: "uuid", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_SubjectTeacher", x => new { x.SubjectsId, x.TeachersId });
+                    table.ForeignKey(
+                        name: "FK_SubjectTeacher_Subjects_SubjectsId",
+                        column: x => x.SubjectsId,
+                        principalTable: "Subjects",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_SubjectTeacher_Teachers_TeachersId",
+                        column: x => x.TeachersId,
+                        principalTable: "Teachers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "DepartmentTeacher",
+                columns: table => new
+                {
+                    DepartmentsId = table.Column<Guid>(type: "uuid", nullable: false),
+                    TeachersId = table.Column<Guid>(type: "uuid", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_DepartmentTeacher", x => new { x.DepartmentsId, x.TeachersId });
+                    table.ForeignKey(
+                        name: "FK_DepartmentTeacher_Departments_DepartmentsId",
+                        column: x => x.DepartmentsId,
+                        principalTable: "Departments",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_DepartmentTeacher_Teachers_TeachersId",
+                        column: x => x.TeachersId,
+                        principalTable: "Teachers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Groups",
                 columns: table => new
                 {
@@ -48,26 +140,6 @@ namespace StatementWebApp.Persistence.Migrations
                     table.PrimaryKey("PK_Groups", x => x.Id);
                     table.ForeignKey(
                         name: "FK_Groups_Departments_DepartmentId",
-                        column: x => x.DepartmentId,
-                        principalTable: "Departments",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Teachers",
-                columns: table => new
-                {
-                    Id = table.Column<Guid>(type: "uuid", nullable: false),
-                    FirstName = table.Column<string>(type: "text", nullable: false),
-                    LastName = table.Column<string>(type: "text", nullable: false),
-                    DepartmentId = table.Column<Guid>(type: "uuid", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Teachers", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Teachers_Departments_DepartmentId",
                         column: x => x.DepartmentId,
                         principalTable: "Departments",
                         principalColumn: "Id",
@@ -95,30 +167,6 @@ namespace StatementWebApp.Persistence.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "TeacherSubject",
-                columns: table => new
-                {
-                    TeacherId = table.Column<Guid>(type: "uuid", nullable: false),
-                    SubjectId = table.Column<Guid>(type: "uuid", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_TeacherSubject", x => new { x.TeacherId, x.SubjectId });
-                    table.ForeignKey(
-                        name: "FK_TeacherSubject_Subjects_SubjectId",
-                        column: x => x.SubjectId,
-                        principalTable: "Subjects",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_TeacherSubject_Teachers_TeacherId",
-                        column: x => x.TeacherId,
-                        principalTable: "Teachers",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "Grades",
                 columns: table => new
                 {
@@ -127,11 +175,17 @@ namespace StatementWebApp.Persistence.Migrations
                     TeacherId = table.Column<Guid>(type: "uuid", nullable: false),
                     StudentId = table.Column<Guid>(type: "uuid", nullable: false),
                     SubjectId = table.Column<Guid>(type: "uuid", nullable: false),
-                    Date = table.Column<DateTime>(type: "timestamp with time zone", nullable: false, defaultValueSql: "CURRENT_TIMESTAMP")
+                    StatementId = table.Column<Guid>(type: "uuid", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Grades", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Grades_Statements_StatementId",
+                        column: x => x.StatementId,
+                        principalTable: "Statements",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_Grades_Students_StudentId",
                         column: x => x.StudentId,
@@ -156,25 +210,40 @@ namespace StatementWebApp.Persistence.Migrations
                 name: "StudentSubject",
                 columns: table => new
                 {
-                    StudentId = table.Column<Guid>(type: "uuid", nullable: false),
-                    SubjectId = table.Column<Guid>(type: "uuid", nullable: false)
+                    StudentsId = table.Column<Guid>(type: "uuid", nullable: false),
+                    SubjectsId = table.Column<Guid>(type: "uuid", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_StudentSubject", x => new { x.StudentId, x.SubjectId });
+                    table.PrimaryKey("PK_StudentSubject", x => new { x.StudentsId, x.SubjectsId });
                     table.ForeignKey(
-                        name: "FK_StudentSubject_Students_StudentId",
-                        column: x => x.StudentId,
+                        name: "FK_StudentSubject_Students_StudentsId",
+                        column: x => x.StudentsId,
                         principalTable: "Students",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_StudentSubject_Subjects_SubjectId",
-                        column: x => x.SubjectId,
+                        name: "FK_StudentSubject_Subjects_SubjectsId",
+                        column: x => x.SubjectsId,
                         principalTable: "Subjects",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Departments_InstituteId",
+                table: "Departments",
+                column: "InstituteId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_DepartmentTeacher_TeachersId",
+                table: "DepartmentTeacher",
+                column: "TeachersId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Grades_StatementId",
+                table: "Grades",
+                column: "StatementId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Grades_StudentId",
@@ -202,24 +271,22 @@ namespace StatementWebApp.Persistence.Migrations
                 column: "GroupId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_StudentSubject_SubjectId",
+                name: "IX_StudentSubject_SubjectsId",
                 table: "StudentSubject",
-                column: "SubjectId");
+                column: "SubjectsId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Teachers_DepartmentId",
-                table: "Teachers",
-                column: "DepartmentId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_TeacherSubject_SubjectId",
-                table: "TeacherSubject",
-                column: "SubjectId");
+                name: "IX_SubjectTeacher_TeachersId",
+                table: "SubjectTeacher",
+                column: "TeachersId");
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.DropTable(
+                name: "DepartmentTeacher");
+
             migrationBuilder.DropTable(
                 name: "Grades");
 
@@ -227,7 +294,10 @@ namespace StatementWebApp.Persistence.Migrations
                 name: "StudentSubject");
 
             migrationBuilder.DropTable(
-                name: "TeacherSubject");
+                name: "SubjectTeacher");
+
+            migrationBuilder.DropTable(
+                name: "Statements");
 
             migrationBuilder.DropTable(
                 name: "Students");
@@ -243,6 +313,9 @@ namespace StatementWebApp.Persistence.Migrations
 
             migrationBuilder.DropTable(
                 name: "Departments");
+
+            migrationBuilder.DropTable(
+                name: "Institutes");
         }
     }
 }

@@ -12,7 +12,9 @@ public class Teacher
     
     public string LastName { get; set; }
     
-    public Department Department { get; set; }
-
-    public Guid DepartmentId { get; set; }
+    public virtual ICollection<Subject> Subjects { get; set; }
+    
+    public virtual ICollection<Department> Departments { get; set; }
+    
+    public virtual ICollection<Grade> Grades { get; set; }
 }

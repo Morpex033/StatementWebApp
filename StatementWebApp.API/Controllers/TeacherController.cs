@@ -1,5 +1,6 @@
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using StatementWebApp.Core.Dto;
 using StatementWebApp.Core.Entity;
 using StatementWebApp.Infrastructure.Query.Teacher;
 using Swashbuckle.AspNetCore.Annotations;
@@ -22,9 +23,9 @@ public class TeacherController : ControllerBase
     public async Task<IActionResult> GetTeachers(CancellationToken cancellationToken)
     {
         var query = new GetTeachersQuery();
-        
+
         var result = await _mediator.Send(query, cancellationToken);
-        
+
         return Ok(result);
     }
 
@@ -36,9 +37,23 @@ public class TeacherController : ControllerBase
         {
             Id = id
         };
-        
+
         var result = await _mediator.Send(query, cancellationToken);
-        
+
+        return Ok(result);
+    }
+
+    [HttpGet("{id:guid}/details")]
+    [SwaggerResponse(200, "Success", typeof(TeacherDetailsDto))]
+    public async Task<IActionResult> GetTeacherDetails(Guid id, CancellationToken cancellationToken)
+    {
+        var query = new GetTeacherDetailsQuery()
+        {
+            Id = id
+        };
+
+        var result = await _mediator.Send(query, cancellationToken);
+
         return Ok(result);
     }
 }

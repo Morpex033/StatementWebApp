@@ -1,5 +1,6 @@
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using StatementWebApp.Core.Dto;
 using StatementWebApp.Core.Entity;
 using StatementWebApp.Infrastructure;
 using StatementWebApp.Infrastructure.Query.Department;
@@ -41,5 +42,19 @@ public class DepartmentController : ControllerBase
         var department = await _mediator.Send(query, cancellationToken);
 
         return Ok(department);
+    }
+
+    [HttpGet("{id:guid}/details")]
+    [SwaggerResponse(200, "Success", typeof(List<DepartmentDetailsDto>))]
+    public async Task<IActionResult> GetDepartmentDetails(Guid id, CancellationToken cancellationToken)
+    {
+        var query = new GetDepartmentDetailsQuery()
+        {
+            Id = id
+        };
+        
+        var departmentDetails = await _mediator.Send(query, cancellationToken);
+        
+        return Ok(departmentDetails);
     }
 }

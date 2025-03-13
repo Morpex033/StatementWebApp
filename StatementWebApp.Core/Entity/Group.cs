@@ -10,7 +10,10 @@ public class Group
     
     public string Name { get; set; }
     
-    public Department Department { get; set; }
-
+    [ForeignKey("Department")]
     public Guid DepartmentId { get; set; }
+    
+    public virtual Department Department { get; set; }
+    
+    public virtual ICollection<Student> Students { get; set; }
 }

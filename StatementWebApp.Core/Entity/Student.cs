@@ -12,7 +12,12 @@ public class Student
     
     public string LastName { get; set; }
     
-    public Group Group { get; set; }
-
+    [ForeignKey("Group")]
     public Guid GroupId { get; set; }
+    
+    public virtual Group Group { get; set; }
+    
+    public virtual ICollection<Subject> Subjects { get; set; }
+    
+    public virtual ICollection<Grade> Grades { get; set; }
 }

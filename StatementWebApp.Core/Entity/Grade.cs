@@ -1,5 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Text.Json.Serialization;
 using StatementWebApp.Core.Dto;
 
 namespace StatementWebApp.Core.Entity;
@@ -11,17 +12,25 @@ public class Grade
 
     public int Value { get; set; }
 
+    [ForeignKey("Teacher")]
     public Guid TeacherId { get; set; }
 
-    public Teacher Teacher { get; set; }
+    public virtual Teacher Teacher { get; set; }
 
+    [ForeignKey("Student")]
     public Guid StudentId { get; set; }
 
-    public Student Student { get; set; }
+    public virtual Student Student { get; set; }
 
+    [ForeignKey("Subject")]
     public Guid SubjectId { get; set; }
 
-    public Subject Subject { get; set; }
+    public virtual Subject Subject { get; set; }
+
+    [ForeignKey("Statement")]
+    public Guid StatementId { get; set; }
+
+    public virtual Statement Statement { get; set; }
 
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
     public DateTime Date { get; }
@@ -40,7 +49,7 @@ public class Grade
         Student = student;
         Subject = subject;
     }
-    
+
     public Grade(UpdateGradeDto grade, Teacher teacher, Student student, Subject subject)
     {
         Value = grade.Value;

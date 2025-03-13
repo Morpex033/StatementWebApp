@@ -46,7 +46,7 @@ public class GradeController : ControllerBase
 
     [HttpPost]
     [SwaggerResponse(200, "Success", typeof(Grade))]
-    public async Task<IActionResult> AddGrade([FromBody]CreateGradeDto grade, CancellationToken cancellationToken)
+    public async Task<IActionResult> AddGrade([FromBody] CreateGradeDto grade, CancellationToken cancellationToken)
     {
         var query = new AddGradeCommand()
         {
@@ -63,7 +63,7 @@ public class GradeController : ControllerBase
 
     [HttpPut("{id:guid}")]
     [SwaggerResponse(200, "Success", typeof(Grade))]
-    public async Task<IActionResult> UpdateGrade([FromBody]UpdateGradeDto grade, CancellationToken cancellationToken)
+    public async Task<IActionResult> UpdateGrade([FromBody] UpdateGradeDto grade, CancellationToken cancellationToken)
     {
         var query = new UpdateGradeCommand()
         {
@@ -91,5 +91,19 @@ public class GradeController : ControllerBase
         await _mediator.Send(query, cancellationToken);
 
         return Ok();
+    }
+
+    [HttpGet("{id:guid}/details")]
+    [SwaggerResponse(200, "Success", typeof(List<GradeDetailsDto>))]
+    public async Task<IActionResult> GetGradeDetails(Guid id, CancellationToken cancellationToken)
+    {
+        var query = new GetGradeDetailsQuery()
+        {
+            Id = id
+        };
+
+        var result = await _mediator.Send(query, cancellationToken);
+
+        return Ok(result);
     }
 }

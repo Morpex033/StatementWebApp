@@ -9,4 +9,10 @@ public class Subject
     public Guid Id { get; set; }
     
     public string Name { get; set; }
+    
+    public virtual ICollection<Student> Students { get; set; }
+    
+    public virtual ICollection<Teacher> Teachers { get; set; }
+    
+    public virtual ICollection<Grade> Grades { get; set; }
 }

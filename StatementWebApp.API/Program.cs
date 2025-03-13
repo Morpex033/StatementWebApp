@@ -1,4 +1,5 @@
 using System.Reflection;
+using System.Text.Json.Serialization;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using StatementWebApp.Core.Entity;
@@ -28,7 +29,9 @@ public class Program
             .AddScoped<ITeacherRepository, TeacherRepository>()
             .AddScoped<IStudentRepository, StudentRepository>()
             .AddScoped<IGradeRepository, GradeRepository>()
-            .AddScoped<IGroupRepository, GroupRepository>();
+            .AddScoped<IGroupRepository, GroupRepository>()
+            .AddScoped<IInstituteRepository, InstituteRepository>()
+            .AddScoped<IStatementRepository, StatementRepository>();
 
         builder.Services.AddCors(options =>
         {
@@ -41,7 +44,12 @@ public class Program
         });
 
         builder.Services.AddControllers(options =>
-            options.Filters.Add<GlobalExceptionFilter>());
+                options.Filters.Add<GlobalExceptionFilter>())
+            .AddJsonOptions(options =>
+            {
+                options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
+            });
+
 
         builder.Services.AddEndpointsApiExplorer();
         builder.Services.AddSwaggerGen();
@@ -63,6 +71,8 @@ public class Program
         app.MapControllerRoute("default", "/api/{controller}/{action=Index}/{id?}");
 
         app.MapControllers();
+
+        app.UseDeveloperExceptionPage();
 
         app.Run();
     }

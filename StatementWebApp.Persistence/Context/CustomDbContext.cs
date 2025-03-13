@@ -21,9 +21,8 @@ public class CustomDbContext : DbContext
     public DbSet<Group> Groups { get; set; }
 
     public DbSet<Department> Departments { get; set; }
-
-    protected override void OnModelCreating(ModelBuilder modelBuilder)
-    {
-        modelBuilder.ApplyConfigurationsFromAssembly(typeof(CustomDbContext).Assembly);
-    }
+    
+    public DbSet<Institute> Institutes { get; set; }
+    
+    public DbSet<Statement> Statements { get; set; }
 }

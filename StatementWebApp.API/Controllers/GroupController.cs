@@ -1,5 +1,6 @@
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using StatementWebApp.Core.Dto;
 using StatementWebApp.Core.Entity;
 using StatementWebApp.Infrastructure.Query.Group;
 using Swashbuckle.AspNetCore.Annotations;
@@ -33,6 +34,20 @@ public class GroupController : ControllerBase
     public async Task<IActionResult> GetGroup(Guid id, CancellationToken cancellationToken)
     {
         var query = new GetGroupByIdQuery()
+        {
+            Id = id
+        };
+        
+        var result = await _mediator.Send(query, cancellationToken);
+        
+        return Ok(result);
+    }
+
+    [HttpGet("{id:guid}/details")]
+    [SwaggerResponse(200, "Success", typeof(List<GroupDetailsDto>))]
+    public async Task<IActionResult> GetGroupDetails(Guid id, CancellationToken cancellationToken)
+    {
+        var query = new GetGroupDetailsQuery()
         {
             Id = id
         };

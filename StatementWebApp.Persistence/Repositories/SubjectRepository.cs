@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using StatementWebApp.Core.Dto;
 using StatementWebApp.Core.Entity;
 using StatementWebApp.Core.Exception;
 using StatementWebApp.Core.Interface;
@@ -23,9 +24,34 @@ public class SubjectRepository : ISubjectRepository
     public async Task<Subject> GetSubjectByIdAsync(Guid id, CancellationToken cancellationToken)
     {
         var subject =
-            await _context.Subjects.SingleOrDefaultAsync(s => s.Id == id, cancellationToken: cancellationToken) ??
+            await _context.Subjects
+                .SingleOrDefaultAsync(s => s.Id == id, cancellationToken: cancellationToken) ??
             throw new NotFoundException("Subject not found");
 
         return subject;
+    }
+
+    public async Task<SubjectDetailsDto> GetSubjectDetailsAsync(Guid id, CancellationToken cancellationToken)
+    {
+        var subject = await GetSubjectByIdAsync(id, cancellationToken);
+
+        var teachers =
+            await _context.Teachers.Where(t => t.Subjects.Contains(subject))
+                .ToListAsync(cancellationToken: cancellationToken) ?? throw new NotFoundException("Teacher not found");
+
+        var students =
+            await _context.Students.Where(s => s.Subjects.Contains(subject))
+                .ToListAsync(cancellationToken: cancellationToken) ?? throw new NotFoundException("Student not found");
+
+        var grades =
+            await _context.Grades.Where(g => g.SubjectId == subject.Id)
+                .ToListAsync(cancellationToken: cancellationToken) ?? throw new NotFoundException("Grade not found");
+
+        return new SubjectDetailsDto()
+        {
+            Teachers = teachers,
+            Grades = grades,
+            Students = students
+        };
     }
 }

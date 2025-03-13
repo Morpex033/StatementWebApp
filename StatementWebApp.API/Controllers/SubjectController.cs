@@ -1,5 +1,6 @@
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using StatementWebApp.Core.Dto;
 using StatementWebApp.Core.Entity;
 using StatementWebApp.Infrastructure.Query.Subject;
 using Swashbuckle.AspNetCore.Annotations;
@@ -22,9 +23,9 @@ public class SubjectController : ControllerBase
     public async Task<IActionResult> GetSubjects(CancellationToken cancellationToken)
     {
         var query = new GetSubjectsQuery();
-        
+
         var result = await _mediator.Send(query, cancellationToken);
-        
+
         return Ok(result);
     }
 
@@ -36,9 +37,23 @@ public class SubjectController : ControllerBase
         {
             Id = id
         };
-        
+
         var result = await _mediator.Send(query, cancellationToken);
-        
+
+        return Ok(result);
+    }
+
+    [HttpGet("{id:guid}/details")]
+    [SwaggerResponse(200, "Success", typeof(SubjectDetailsDto))]
+    public async Task<IActionResult> GetSubjectDetails(Guid id, CancellationToken cancellationToken)
+    {
+        var query = new GetSubjectByIdQuery()
+        {
+            Id = id
+        };
+
+        var result = await _mediator.Send(query, cancellationToken);
+
         return Ok(result);
     }
 }

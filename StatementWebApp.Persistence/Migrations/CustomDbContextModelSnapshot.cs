@@ -22,10 +22,28 @@ namespace StatementWebApp.Persistence.Migrations
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
+            modelBuilder.Entity("DepartmentTeacher", b =>
+                {
+                    b.Property<Guid>("DepartmentsId")
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("TeachersId")
+                        .HasColumnType("uuid");
+
+                    b.HasKey("DepartmentsId", "TeachersId");
+
+                    b.HasIndex("TeachersId");
+
+                    b.ToTable("DepartmentTeacher");
+                });
+
             modelBuilder.Entity("StatementWebApp.Core.Entity.Department", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("InstituteId")
                         .HasColumnType("uuid");
 
                     b.Property<string>("Name")
@@ -33,6 +51,8 @@ namespace StatementWebApp.Persistence.Migrations
                         .HasColumnType("text");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("InstituteId");
 
                     b.ToTable("Departments");
                 });
@@ -43,10 +63,8 @@ namespace StatementWebApp.Persistence.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
-                    b.Property<DateTime>("Date")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("timestamp with time zone")
-                        .HasDefaultValueSql("CURRENT_TIMESTAMP");
+                    b.Property<Guid>("StatementId")
+                        .HasColumnType("uuid");
 
                     b.Property<Guid>("StudentId")
                         .HasColumnType("uuid");
@@ -61,6 +79,8 @@ namespace StatementWebApp.Persistence.Migrations
                         .HasColumnType("integer");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("StatementId");
 
                     b.HasIndex("StudentId");
 
@@ -91,6 +111,36 @@ namespace StatementWebApp.Persistence.Migrations
                     b.ToTable("Groups");
                 });
 
+            modelBuilder.Entity("StatementWebApp.Core.Entity.Institute", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Institutes");
+                });
+
+            modelBuilder.Entity("StatementWebApp.Core.Entity.Statement", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("Index")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Statements");
+                });
+
             modelBuilder.Entity("StatementWebApp.Core.Entity.Student", b =>
                 {
                     b.Property<Guid>("Id")
@@ -115,21 +165,6 @@ namespace StatementWebApp.Persistence.Migrations
                     b.ToTable("Students");
                 });
 
-            modelBuilder.Entity("StatementWebApp.Core.Entity.StudentSubject", b =>
-                {
-                    b.Property<Guid>("StudentId")
-                        .HasColumnType("uuid");
-
-                    b.Property<Guid>("SubjectId")
-                        .HasColumnType("uuid");
-
-                    b.HasKey("StudentId", "SubjectId");
-
-                    b.HasIndex("SubjectId");
-
-                    b.ToTable("StudentSubject");
-                });
-
             modelBuilder.Entity("StatementWebApp.Core.Entity.Subject", b =>
                 {
                     b.Property<Guid>("Id")
@@ -151,9 +186,6 @@ namespace StatementWebApp.Persistence.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
-                    b.Property<Guid>("DepartmentId")
-                        .HasColumnType("uuid");
-
                     b.Property<string>("FirstName")
                         .IsRequired()
                         .HasColumnType("text");
@@ -164,45 +196,92 @@ namespace StatementWebApp.Persistence.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("DepartmentId");
-
                     b.ToTable("Teachers");
                 });
 
-            modelBuilder.Entity("StatementWebApp.Core.Entity.TeacherSubject", b =>
+            modelBuilder.Entity("StudentSubject", b =>
                 {
-                    b.Property<Guid>("TeacherId")
+                    b.Property<Guid>("StudentsId")
                         .HasColumnType("uuid");
 
-                    b.Property<Guid>("SubjectId")
+                    b.Property<Guid>("SubjectsId")
                         .HasColumnType("uuid");
 
-                    b.HasKey("TeacherId", "SubjectId");
+                    b.HasKey("StudentsId", "SubjectsId");
 
-                    b.HasIndex("SubjectId");
+                    b.HasIndex("SubjectsId");
 
-                    b.ToTable("TeacherSubject");
+                    b.ToTable("StudentSubject");
+                });
+
+            modelBuilder.Entity("SubjectTeacher", b =>
+                {
+                    b.Property<Guid>("SubjectsId")
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("TeachersId")
+                        .HasColumnType("uuid");
+
+                    b.HasKey("SubjectsId", "TeachersId");
+
+                    b.HasIndex("TeachersId");
+
+                    b.ToTable("SubjectTeacher");
+                });
+
+            modelBuilder.Entity("DepartmentTeacher", b =>
+                {
+                    b.HasOne("StatementWebApp.Core.Entity.Department", null)
+                        .WithMany()
+                        .HasForeignKey("DepartmentsId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("StatementWebApp.Core.Entity.Teacher", null)
+                        .WithMany()
+                        .HasForeignKey("TeachersId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("StatementWebApp.Core.Entity.Department", b =>
+                {
+                    b.HasOne("StatementWebApp.Core.Entity.Institute", "Institute")
+                        .WithMany("Departments")
+                        .HasForeignKey("InstituteId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Institute");
                 });
 
             modelBuilder.Entity("StatementWebApp.Core.Entity.Grade", b =>
                 {
+                    b.HasOne("StatementWebApp.Core.Entity.Statement", "Statement")
+                        .WithMany("Grades")
+                        .HasForeignKey("StatementId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("StatementWebApp.Core.Entity.Student", "Student")
-                        .WithMany()
+                        .WithMany("Grades")
                         .HasForeignKey("StudentId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("StatementWebApp.Core.Entity.Subject", "Subject")
-                        .WithMany()
+                        .WithMany("Grades")
                         .HasForeignKey("SubjectId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("StatementWebApp.Core.Entity.Teacher", "Teacher")
-                        .WithMany()
+                        .WithMany("Grades")
                         .HasForeignKey("TeacherId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("Statement");
 
                     b.Navigation("Student");
 
@@ -214,7 +293,7 @@ namespace StatementWebApp.Persistence.Migrations
             modelBuilder.Entity("StatementWebApp.Core.Entity.Group", b =>
                 {
                     b.HasOne("StatementWebApp.Core.Entity.Department", "Department")
-                        .WithMany()
+                        .WithMany("Groups")
                         .HasForeignKey("DepartmentId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -225,7 +304,7 @@ namespace StatementWebApp.Persistence.Migrations
             modelBuilder.Entity("StatementWebApp.Core.Entity.Student", b =>
                 {
                     b.HasOne("StatementWebApp.Core.Entity.Group", "Group")
-                        .WithMany()
+                        .WithMany("Students")
                         .HasForeignKey("GroupId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -233,53 +312,69 @@ namespace StatementWebApp.Persistence.Migrations
                     b.Navigation("Group");
                 });
 
-            modelBuilder.Entity("StatementWebApp.Core.Entity.StudentSubject", b =>
+            modelBuilder.Entity("StudentSubject", b =>
                 {
-                    b.HasOne("StatementWebApp.Core.Entity.Student", "Student")
+                    b.HasOne("StatementWebApp.Core.Entity.Student", null)
                         .WithMany()
-                        .HasForeignKey("StudentId")
+                        .HasForeignKey("StudentsId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("StatementWebApp.Core.Entity.Subject", "Subject")
+                    b.HasOne("StatementWebApp.Core.Entity.Subject", null)
                         .WithMany()
-                        .HasForeignKey("SubjectId")
+                        .HasForeignKey("SubjectsId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("SubjectTeacher", b =>
+                {
+                    b.HasOne("StatementWebApp.Core.Entity.Subject", null)
+                        .WithMany()
+                        .HasForeignKey("SubjectsId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Student");
+                    b.HasOne("StatementWebApp.Core.Entity.Teacher", null)
+                        .WithMany()
+                        .HasForeignKey("TeachersId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
 
-                    b.Navigation("Subject");
+            modelBuilder.Entity("StatementWebApp.Core.Entity.Department", b =>
+                {
+                    b.Navigation("Groups");
+                });
+
+            modelBuilder.Entity("StatementWebApp.Core.Entity.Group", b =>
+                {
+                    b.Navigation("Students");
+                });
+
+            modelBuilder.Entity("StatementWebApp.Core.Entity.Institute", b =>
+                {
+                    b.Navigation("Departments");
+                });
+
+            modelBuilder.Entity("StatementWebApp.Core.Entity.Statement", b =>
+                {
+                    b.Navigation("Grades");
+                });
+
+            modelBuilder.Entity("StatementWebApp.Core.Entity.Student", b =>
+                {
+                    b.Navigation("Grades");
+                });
+
+            modelBuilder.Entity("StatementWebApp.Core.Entity.Subject", b =>
+                {
+                    b.Navigation("Grades");
                 });
 
             modelBuilder.Entity("StatementWebApp.Core.Entity.Teacher", b =>
                 {
-                    b.HasOne("StatementWebApp.Core.Entity.Department", "Department")
-                        .WithMany()
-                        .HasForeignKey("DepartmentId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Department");
-                });
-
-            modelBuilder.Entity("StatementWebApp.Core.Entity.TeacherSubject", b =>
-                {
-                    b.HasOne("StatementWebApp.Core.Entity.Subject", "Subject")
-                        .WithMany()
-                        .HasForeignKey("SubjectId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("StatementWebApp.Core.Entity.Teacher", "Teacher")
-                        .WithMany()
-                        .HasForeignKey("TeacherId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Subject");
-
-                    b.Navigation("Teacher");
+                    b.Navigation("Grades");
                 });
 #pragma warning restore 612, 618
         }

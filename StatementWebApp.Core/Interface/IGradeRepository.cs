@@ -11,4 +11,6 @@ public interface IGradeRepository
     Task<Grade> AddGradeAsync(CreateGradeDto grade, CancellationToken cancellationToken);
     Task<Grade> UpdateGradeAsync(UpdateGradeDto grade, CancellationToken cancellationToken);
     Task DeleteGradeAsync(Guid id, CancellationToken cancellationToken);
+    
+    Task<GradeDetailsDto> GetGradeDetailsAsync(Guid id, CancellationToken cancellationToken);
 }
