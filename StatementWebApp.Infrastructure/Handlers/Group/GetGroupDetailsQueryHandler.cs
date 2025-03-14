@@ -16,6 +16,6 @@ public class GetGroupDetailsQueryHandler : IRequestHandler<GetGroupDetailsQuery,
 
     public Task<GroupDetailsDto> Handle(GetGroupDetailsQuery request, CancellationToken cancellationToken)
     {
-        return _groupRepository.GetGroupDetailsAsync(request.Id, cancellationToken);
+        return _groupRepository.GetGroupDetailsAsync(request.Id, request.PageSize, request.PageNumber, cancellationToken);
     }
 }

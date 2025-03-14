@@ -7,7 +7,7 @@ public interface IStatementRepository
 {
     Task<Statement> CreateStatementAsync(Guid instituteId, CancellationToken cancellationToken);
 
-    Task<List<Statement>> GetAllStatementsAsync(CancellationToken cancellationToken);
+    Task<EntityWithCountDto<Statement>> GetAllStatementsAsync(int pageSize, int pageNumber, CancellationToken cancellationToken);
 
     Task<Statement> GetStatementByIdAsync(Guid id, CancellationToken cancellationToken);
 
@@ -15,5 +15,5 @@ public interface IStatementRepository
 
     Task DeleteStatementByIdAsync(Guid id, CancellationToken cancellationToken);
     
-    Task<StatementDetailsDto> GetStatementDetailsAsync(Guid id, CancellationToken cancellationToken);
+    Task<StatementDetailsDto> GetStatementDetailsAsync(Guid id, int pageSize, int pageNumber, CancellationToken cancellationToken);
 }

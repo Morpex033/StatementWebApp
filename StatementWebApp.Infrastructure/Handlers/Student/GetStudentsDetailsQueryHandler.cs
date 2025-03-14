@@ -16,6 +16,6 @@ public class GetStudentsDetailsQueryHandler : IRequestHandler<GetStudentDetailsQ
 
     public Task<StudentDetailsDto> Handle(GetStudentDetailsQuery request, CancellationToken cancellationToken)
     {
-        return _studentRepository.GetStudentDetailsAsync(request.Id, cancellationToken);
+        return _studentRepository.GetStudentDetailsAsync(request.Id, request.PageSize, request.PageNumber, cancellationToken);
     }
 }

@@ -31,9 +31,14 @@ public class InstituteController : ControllerBase
 
     [HttpGet]
     [SwaggerResponse(200, "Success", typeof(List<Institute>))]
-    public async Task<IActionResult> GetInstitutes(CancellationToken cancellationToken)
+    public async Task<IActionResult> GetInstitutes(CancellationToken cancellationToken, [FromQuery] int pageSize = 10,
+        [FromQuery] int pageNumber = 1)
     {
-        var query = new GetInstitutesQuery();
+        var query = new GetInstitutesQuery()
+        {
+            PageSize = pageSize,
+            PageNumber = pageNumber
+        };
 
         var result = await _mediator.Send(query, cancellationToken);
 
@@ -42,12 +47,18 @@ public class InstituteController : ControllerBase
 
     [HttpGet("{id:guid}/details")]
     [SwaggerResponse(200, "Success", typeof(List<InstituteDetailsDto>))]
-    public async Task<IActionResult> GetInstituteDetails(Guid id, CancellationToken cancellationToken)
+    public async Task<IActionResult> GetInstituteDetails(Guid id, CancellationToken cancellationToken, [FromQuery] int pageSize = 10,
+        [FromQuery] int pageNumber = 1)
     {
-        var query = new GetInstituteDetailsQuery() { Id = id };
-        
+        var query = new GetInstituteDetailsQuery()
+        {
+            Id = id,
+            PageSize = pageSize,
+            PageNumber = pageNumber
+        };
+
         var result = await _mediator.Send(query, cancellationToken);
-        
+
         return Ok(result);
     }
 }

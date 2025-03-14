@@ -24,22 +24,37 @@ public class InstituteRepository : IInstituteRepository
         return institute;
     }
 
-    public async Task<List<Institute>> GetInstitutesAsync(CancellationToken cancellationToken)
+    public async Task<EntityWithCountDto<Institute>> GetInstitutesAsync(int pageSize, int pageNumber,
+        CancellationToken cancellationToken)
     {
-        return await _context.Institutes.ToListAsync(cancellationToken);
+        var totalCount = await _context.Institutes.CountAsync(cancellationToken);
+
+        var institutes = await _context.Institutes.Skip((pageNumber - 1) * pageSize).Take(pageSize)
+            .ToListAsync(cancellationToken);
+        return new EntityWithCountDto<Institute>()
+        {
+            TotalCount = totalCount,
+            Data = institutes
+        };
     }
 
-    public async Task<InstituteDetailsDto> GetInstituteDetailsAsync(Guid id, CancellationToken cancellationToken)
+    public async Task<InstituteDetailsDto> GetInstituteDetailsAsync(Guid id, int pageSize, int pageNumber,
+        CancellationToken cancellationToken)
     {
-        var institute = await GetInstituteByIdAsync(id, cancellationToken);
-
         var departments =
-            await _context.Departments.Where(d => d.InstituteId == institute.Id).ToListAsync(cancellationToken) ??
+            await _context.Departments
+                .Where(d => d.InstituteId == id)
+                .Skip((pageNumber - 1) * pageSize).Take(pageSize)
+                .ToListAsync(cancellationToken) ??
             throw new NotFoundException("Department not found");
 
         return new InstituteDetailsDto()
         {
-            Departments = departments
+            Departments = new EntityWithCountDto<Department>()
+            {
+                Data = departments,
+                TotalCount = departments.Count
+            }
         };
     }
 }

@@ -47,9 +47,19 @@ public class StatementRepository : IStatementRepository
         }
     }
 
-    public async Task<List<Statement>> GetAllStatementsAsync(CancellationToken cancellationToken)
+    public async Task<EntityWithCountDto<Statement>> GetAllStatementsAsync(int pageSize, int pageNumber,
+        CancellationToken cancellationToken)
     {
-        return await _context.Statements.ToListAsync(cancellationToken);
+        var totalCount = await _context.Statements.CountAsync(cancellationToken);
+
+        var statements = await _context.Statements.Skip((pageNumber - 1) * pageSize).Take(pageSize)
+            .ToListAsync(cancellationToken);
+
+        return new EntityWithCountDto<Statement>()
+        {
+            TotalCount = totalCount,
+            Data = statements
+        };
     }
 
     public async Task<Statement> GetStatementByIdAsync(Guid id, CancellationToken cancellationToken)
@@ -82,16 +92,22 @@ public class StatementRepository : IStatementRepository
         _context.Statements.Remove(statement);
     }
 
-    public async Task<StatementDetailsDto> GetStatementDetailsAsync(Guid id, CancellationToken cancellationToken)
+    public async Task<StatementDetailsDto> GetStatementDetailsAsync(Guid id, int pageSize, int pageNumber,
+        CancellationToken cancellationToken)
     {
-        var statement = await GetStatementByIdAsync(id, cancellationToken);
-
-        var grades = await _context.Grades.Where(g => g.StatementId == statement.Id).ToListAsync(cancellationToken) ??
+        var grades = await _context.Grades
+                         .Where(g => g.StatementId == id)
+                         .Skip((pageNumber - 1) * pageSize).Take(pageSize)
+                         .ToListAsync(cancellationToken) ??
                      throw new BadRequestException("Statement not found");
 
         return new StatementDetailsDto()
         {
-            Grades = grades
+            Grades = new EntityWithCountDto<Grade>()
+            {
+                Data = grades,
+                TotalCount = grades.Count
+            }
         };
     }
 }

@@ -16,9 +16,18 @@ public class SubjectRepository : ISubjectRepository
         _context = context;
     }
 
-    public async Task<List<Subject>> GetSubjectsAsync(CancellationToken cancellationToken)
+    public async Task<EntityWithCountDto<Subject>> GetSubjectsAsync(int pageSize, int pageNumber, CancellationToken cancellationToken)
     {
-        return await _context.Subjects.ToListAsync(cancellationToken: cancellationToken);
+        var totalCount = await _context.Subjects.CountAsync(cancellationToken);
+        
+        var subjects = await _context.Subjects.Skip((pageNumber - 1) * pageSize).Take(pageSize)
+            .ToListAsync(cancellationToken: cancellationToken);
+        
+        return new EntityWithCountDto<Subject>()
+        {
+            TotalCount = totalCount,
+            Data = subjects
+        }; 
     }
 
     public async Task<Subject> GetSubjectByIdAsync(Guid id, CancellationToken cancellationToken)
@@ -31,27 +40,43 @@ public class SubjectRepository : ISubjectRepository
         return subject;
     }
 
-    public async Task<SubjectDetailsDto> GetSubjectDetailsAsync(Guid id, CancellationToken cancellationToken)
+    public async Task<SubjectDetailsDto> GetSubjectDetailsAsync(Guid id, int pageSize, int pageNumber, CancellationToken cancellationToken)
     {
-        var subject = await GetSubjectByIdAsync(id, cancellationToken);
-
         var teachers =
-            await _context.Teachers.Where(t => t.Subjects.Contains(subject))
+            await _context.Teachers
+                .Where(t => t.Subjects.Any(s => s.Id == id))
+                .Skip((pageNumber - 1) * pageSize).Take(pageSize)
                 .ToListAsync(cancellationToken: cancellationToken) ?? throw new NotFoundException("Teacher not found");
 
         var students =
-            await _context.Students.Where(s => s.Subjects.Contains(subject))
+            await _context.Students
+                .Where(s => s.Subjects.Any(subject => subject.Id == id))
+                .Skip((pageNumber - 1) * pageSize).Take(pageSize)
                 .ToListAsync(cancellationToken: cancellationToken) ?? throw new NotFoundException("Student not found");
 
         var grades =
-            await _context.Grades.Where(g => g.SubjectId == subject.Id)
+            await _context.Grades
+                .Where(g => g.SubjectId == id)
+                .Skip((pageNumber - 1) * pageSize).Take(pageSize)
                 .ToListAsync(cancellationToken: cancellationToken) ?? throw new NotFoundException("Grade not found");
 
         return new SubjectDetailsDto()
         {
-            Teachers = teachers,
-            Grades = grades,
-            Students = students
+            Teachers = new EntityWithCountDto<Teacher>()
+            {
+                Data = teachers,
+                TotalCount = teachers.Count
+            },
+            Grades = new EntityWithCountDto<Grade>()
+            {
+                Data = grades,
+                TotalCount = grades.Count
+            },
+            Students = new EntityWithCountDto<Student>()
+            {
+                Data = students,
+                TotalCount = students.Count
+            }
         };
     }
 }

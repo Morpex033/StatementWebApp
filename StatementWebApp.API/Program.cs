@@ -72,8 +72,6 @@ public class Program
 
         app.MapControllers();
 
-        app.UseDeveloperExceptionPage();
-
         app.Run();
     }
 }

@@ -21,9 +21,14 @@ public class DepartmentController : ControllerBase
 
     [HttpGet]
     [SwaggerResponse(200, "Success", typeof(List<Department>))]
-    public async Task<IActionResult> GetDepartments(CancellationToken cancellationToken)
+    public async Task<IActionResult> GetDepartments(CancellationToken cancellationToken, [FromQuery] int pageSize = 10,
+        [FromQuery] int pageNumber = 1)
     {
-        var query = new GetDepartmentsQuery();
+        var query = new GetDepartmentsQuery()
+        {
+            PageSize = pageSize,
+            PageNumber = pageNumber,
+        };
 
         var departments = await _mediator.Send(query, cancellationToken);
 
@@ -46,15 +51,18 @@ public class DepartmentController : ControllerBase
 
     [HttpGet("{id:guid}/details")]
     [SwaggerResponse(200, "Success", typeof(List<DepartmentDetailsDto>))]
-    public async Task<IActionResult> GetDepartmentDetails(Guid id, CancellationToken cancellationToken)
+    public async Task<IActionResult> GetDepartmentDetails(Guid id, CancellationToken cancellationToken, [FromQuery] int pageSize = 10,
+        [FromQuery] int pageNumber = 1)
     {
         var query = new GetDepartmentDetailsQuery()
         {
-            Id = id
+            Id = id,
+            PageSize = pageSize,
+            PageNumber = pageNumber,
         };
-        
+
         var departmentDetails = await _mediator.Send(query, cancellationToken);
-        
+
         return Ok(departmentDetails);
     }
 }

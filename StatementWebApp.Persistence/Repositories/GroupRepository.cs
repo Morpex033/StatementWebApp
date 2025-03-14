@@ -16,9 +16,18 @@ public class GroupRepository : IGroupRepository
         _context = context;
     }
 
-    public async Task<List<Group>> GetGroupsAsync(CancellationToken cancellationToken)
+    public async Task<EntityWithCountDto<Group>> GetGroupsAsync(int pageSize, int pageNumber,
+        CancellationToken cancellationToken)
     {
-        return await _context.Groups.ToListAsync(cancellationToken: cancellationToken);
+        var totalCount = await _context.Groups.CountAsync(cancellationToken: cancellationToken);
+
+        var groups = await _context.Groups.Skip((pageNumber - 1) * pageSize).Take(pageSize)
+            .ToListAsync(cancellationToken: cancellationToken);
+        return new EntityWithCountDto<Group>()
+        {
+            TotalCount = totalCount,
+            Data = groups
+        };
     }
 
     public async Task<Group> GetGroupByIdAsync(Guid id, CancellationToken cancellationToken)
@@ -30,21 +39,28 @@ public class GroupRepository : IGroupRepository
         return group;
     }
 
-    public async Task<GroupDetailsDto> GetGroupDetailsAsync(Guid id, CancellationToken cancellationToken)
+    public async Task<GroupDetailsDto> GetGroupDetailsAsync(Guid id, int pageSize, int pageNumber,
+        CancellationToken cancellationToken)
     {
-        var group = await GetGroupByIdAsync(id, cancellationToken);
-
-        var department = await _context.Departments.SingleOrDefaultAsync(d => d.Id == group.DepartmentId,
-            cancellationToken: cancellationToken) ?? throw new NotFoundException("Department not found");
+        var department = await _context.Departments
+                             .Where(d => d.Groups.Any(g => g.Id == id))
+                             .SingleOrDefaultAsync(cancellationToken: cancellationToken) ??
+                         throw new NotFoundException("Department not found");
 
         var students =
-            await _context.Students.Where(s => s.GroupId == group.Id)
+            await _context.Students
+                .Where(s => s.GroupId == id)
+                .Skip((pageNumber - 1) * pageSize).Take(pageSize)
                 .ToListAsync(cancellationToken: cancellationToken) ?? throw new NotFoundException("Student not found");
 
         return new GroupDetailsDto()
         {
             Department = department,
-            Students = students
+            Students = new EntityWithCountDto<Student>()
+            {
+                Data = students,
+                TotalCount = students.Count
+            }
         };
     }
 }

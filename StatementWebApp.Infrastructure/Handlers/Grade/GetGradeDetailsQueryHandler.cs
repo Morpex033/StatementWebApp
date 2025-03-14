@@ -16,6 +16,6 @@ public class GetGradeDetailsQueryHandler : IRequestHandler<GetGradeDetailsQuery,
 
     public Task<GradeDetailsDto> Handle(GetGradeDetailsQuery request, CancellationToken cancellationToken)
     {
-        return _gradeRepository.GetGradeDetailsAsync(request.Id, cancellationToken);
+        return _gradeRepository.GetGradeDetailsAsync(request.Id, request.PageSize, request.PageNumber, cancellationToken);
     }
 }

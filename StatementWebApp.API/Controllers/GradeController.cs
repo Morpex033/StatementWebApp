@@ -21,9 +21,14 @@ public class GradeController : ControllerBase
 
     [HttpGet]
     [SwaggerResponse(200, "Success", typeof(List<Grade>))]
-    public async Task<IActionResult> GetGrades(CancellationToken cancellationToken)
+    public async Task<IActionResult> GetGrades(CancellationToken cancellationToken, [FromQuery] int pageSize = 10,
+        [FromQuery] int pageNumber = 1)
     {
-        var query = new GetGradesQuery();
+        var query = new GetGradesQuery()
+        {
+            PageNumber = pageNumber,
+            PageSize = pageSize
+        };
 
         var result = await _mediator.Send(query, cancellationToken);
 
@@ -95,11 +100,14 @@ public class GradeController : ControllerBase
 
     [HttpGet("{id:guid}/details")]
     [SwaggerResponse(200, "Success", typeof(List<GradeDetailsDto>))]
-    public async Task<IActionResult> GetGradeDetails(Guid id, CancellationToken cancellationToken)
+    public async Task<IActionResult> GetGradeDetails(Guid id, CancellationToken cancellationToken, [FromQuery] int pageSize = 10,
+        [FromQuery] int pageNumber = 1)
     {
         var query = new GetGradeDetailsQuery()
         {
-            Id = id
+            Id = id,
+            PageNumber = pageNumber,
+            PageSize = pageSize
         };
 
         var result = await _mediator.Send(query, cancellationToken);

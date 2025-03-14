@@ -4,5 +4,5 @@ namespace StatementWebApp.Core.Dto;
 
 public class StatementDetailsDto
 {
-    public List<Grade> Grades { get; set; }
+    public EntityWithCountDto<Grade> Grades { get; set; }
 }

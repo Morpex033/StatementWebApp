@@ -6,7 +6,7 @@ public class DepartmentDetailsDto
 {
     public Institute Institute { get; set; }
     
-    public List<Group> Groups { get; set; }
+    public EntityWithCountDto<Group> Groups { get; set; }
     
-    public List<Teacher> Teachers { get; set; }
+    public EntityWithCountDto<Teacher> Teachers { get; set; }
 }

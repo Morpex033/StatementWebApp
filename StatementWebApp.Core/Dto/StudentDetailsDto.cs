@@ -6,7 +6,5 @@ public class StudentDetailsDto
 {
     public Group Group { get; set; }
     
-    public List<Subject> Subjects { get; set; }
-    
-    public List<Grade> Grades { get; set; }
+    public EntityWithCountDto<Subject> Subjects { get; set; }
 }

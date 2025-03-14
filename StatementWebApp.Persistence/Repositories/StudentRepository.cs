@@ -17,9 +17,19 @@ public class StudentRepository : IStudentRepository
     }
 
 
-    public async Task<List<Student>> GetStudentsAsync(CancellationToken cancellationToken)
+    public async Task<EntityWithCountDto<Student>> GetStudentsAsync(int pageSize, int pageNumber,
+        CancellationToken cancellationToken)
     {
-        return await _context.Students.ToListAsync(cancellationToken: cancellationToken);
+        var totalCount = await _context.Students.CountAsync(cancellationToken);
+
+        var students = await _context.Students.Skip((pageNumber - 1) * pageSize).Take(pageSize)
+            .ToListAsync(cancellationToken: cancellationToken);
+
+        return new EntityWithCountDto<Student>()
+        {
+            TotalCount = totalCount,
+            Data = students
+        };
     }
 
     public async Task<Student> GetStudentByIdAsync(Guid id, CancellationToken cancellationToken)
@@ -32,24 +42,30 @@ public class StudentRepository : IStudentRepository
         return student;
     }
 
-    public async Task<StudentDetailsDto> GetStudentDetailsAsync(Guid id, CancellationToken cancellationToken)
+    public async Task<StudentDetailsDto> GetStudentDetailsAsync(Guid id, int pageSize, int pageNumber,
+        CancellationToken cancellationToken)
     {
-        var student = await GetStudentByIdAsync(id, cancellationToken);
-
-        var group = await _context.Groups.SingleOrDefaultAsync(g => g.Students.Contains(student), cancellationToken) ??
+        var group = await _context.Groups
+                        .Where(g => g.Students.Any(s => s.Id == id))
+                        .SingleOrDefaultAsync(cancellationToken) ??
                     throw new NotFoundException("Group not found");
 
-        var subjects = await _context.Subjects.Where(s => s.Students.Contains(student))
+        var subjects = await _context.Subjects
+            .Where(s => s.Students.Any(student => student.Id == id))
+            .Skip((pageNumber - 1) * pageSize).Take(pageSize)
             .ToListAsync(cancellationToken: cancellationToken);
 
-        var grades = await _context.Grades.Where(g => g.StudentId == student.Id)
+        await _context.Grades.Where(g => g.StudentId == id)
             .ToListAsync(cancellationToken: cancellationToken);
 
         return new StudentDetailsDto()
         {
             Group = group,
-            Subjects = subjects,
-            Grades = grades,
+            Subjects = new EntityWithCountDto<Subject>()
+            {
+                Data = subjects,
+                TotalCount = subjects.Count
+            },
         };
     }
 }

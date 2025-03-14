@@ -35,9 +35,14 @@ public class StatementController : ControllerBase
 
     [HttpGet]
     [SwaggerResponse(200, "Success", typeof(List<Statement>))]
-    public async Task<IActionResult> GetStatements(CancellationToken cancellationToken)
+    public async Task<IActionResult> GetStatements(CancellationToken cancellationToken, [FromQuery] int pageSize = 10,
+        [FromQuery] int pageNumber = 1)
     {
-        var query = new GetStatementsQuery();
+        var query = new GetStatementsQuery()
+        {
+            PageNumber = pageNumber,
+            PageSize = pageSize
+        };
 
         var result = await _mediator.Send(query, cancellationToken);
 
@@ -90,15 +95,18 @@ public class StatementController : ControllerBase
 
     [HttpGet("{id:guid}/details")]
     [SwaggerResponse(200, "Success", typeof(StatementDetailsDto))]
-    public async Task<IActionResult> GetStatementDetails(Guid id, CancellationToken cancellationToken)
+    public async Task<IActionResult> GetStatementDetails(Guid id, CancellationToken cancellationToken, [FromQuery] int pageSize = 10,
+        [FromQuery] int pageNumber = 1)
     {
         var query = new GetStatementDetailsQuery()
         {
-            Id = id
+            Id = id,
+            PageNumber = pageNumber,
+            PageSize = pageSize
         };
-        
+
         var result = await _mediator.Send(query, cancellationToken);
-        
+
         return Ok(result);
     }
 }

@@ -4,5 +4,5 @@ namespace StatementWebApp.Core.Dto;
 
 public class InstituteDetailsDto
 {
-    public List<Department> Departments { get; set; }
+    public EntityWithCountDto<Department> Departments { get; set; }
 }

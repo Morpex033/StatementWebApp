@@ -20,9 +20,14 @@ public class TeacherController : ControllerBase
 
     [HttpGet]
     [SwaggerResponse(200, "Success", typeof(List<Teacher>))]
-    public async Task<IActionResult> GetTeachers(CancellationToken cancellationToken)
+    public async Task<IActionResult> GetTeachers(CancellationToken cancellationToken, [FromQuery] int pageSize = 10,
+        [FromQuery] int pageNumber = 1)
     {
-        var query = new GetTeachersQuery();
+        var query = new GetTeachersQuery()
+        {
+            PageNumber = pageNumber,
+            PageSize = pageSize
+        };
 
         var result = await _mediator.Send(query, cancellationToken);
 
@@ -45,11 +50,15 @@ public class TeacherController : ControllerBase
 
     [HttpGet("{id:guid}/details")]
     [SwaggerResponse(200, "Success", typeof(TeacherDetailsDto))]
-    public async Task<IActionResult> GetTeacherDetails(Guid id, CancellationToken cancellationToken)
+    public async Task<IActionResult> GetTeacherDetails(Guid id, CancellationToken cancellationToken,
+        [FromQuery] int pageSize = 10,
+        [FromQuery] int pageNumber = 1)
     {
         var query = new GetTeacherDetailsQuery()
         {
-            Id = id
+            Id = id,
+            PageNumber = pageNumber,
+            PageSize = pageSize
         };
 
         var result = await _mediator.Send(query, cancellationToken);

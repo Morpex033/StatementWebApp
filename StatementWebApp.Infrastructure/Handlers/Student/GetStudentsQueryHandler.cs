@@ -1,10 +1,11 @@
 using MediatR;
+using StatementWebApp.Core.Dto;
 using StatementWebApp.Core.Interface;
 using StatementWebApp.Infrastructure.Query.Student;
 
 namespace StatementWebApp.Infrastructure.Handlers.Student;
 
-public class GetStudentsQueryHandler : IRequestHandler<GetStudentsQuery, List<Core.Entity.Student>>
+public class GetStudentsQueryHandler : IRequestHandler<GetStudentsQuery, EntityWithCountDto<Core.Entity.Student>>
 {
     private readonly IStudentRepository _studentRepository;
 
@@ -13,8 +14,8 @@ public class GetStudentsQueryHandler : IRequestHandler<GetStudentsQuery, List<Co
         _studentRepository = studentRepository;
     }
 
-    public Task<List<Core.Entity.Student>> Handle(GetStudentsQuery request, CancellationToken cancellationToken)
+    public Task<EntityWithCountDto<Core.Entity.Student>> Handle(GetStudentsQuery request, CancellationToken cancellationToken)
     {
-        return _studentRepository.GetStudentsAsync(cancellationToken);
+        return _studentRepository.GetStudentsAsync(request.PageSize, request.PageNumber, cancellationToken);
     }
 }

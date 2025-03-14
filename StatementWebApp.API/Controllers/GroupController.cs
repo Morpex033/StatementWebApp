@@ -20,12 +20,17 @@ public class GroupController : ControllerBase
 
     [HttpGet]
     [SwaggerResponse(200, "Success", typeof(List<Group>))]
-    public async Task<IActionResult> GetGroups(CancellationToken cancellationToken)
+    public async Task<IActionResult> GetGroups(CancellationToken cancellationToken, [FromQuery] int pageSize = 10,
+        [FromQuery] int pageNumber = 1)
     {
-        var query = new GetGroupsQuery();
-        
+        var query = new GetGroupsQuery()
+        {
+            PageNumber = pageNumber,
+            PageSize = pageSize
+        };
+
         var result = await _mediator.Send(query, cancellationToken);
-        
+
         return Ok(result);
     }
 
@@ -37,23 +42,26 @@ public class GroupController : ControllerBase
         {
             Id = id
         };
-        
+
         var result = await _mediator.Send(query, cancellationToken);
-        
+
         return Ok(result);
     }
 
     [HttpGet("{id:guid}/details")]
     [SwaggerResponse(200, "Success", typeof(List<GroupDetailsDto>))]
-    public async Task<IActionResult> GetGroupDetails(Guid id, CancellationToken cancellationToken)
+    public async Task<IActionResult> GetGroupDetails(Guid id, CancellationToken cancellationToken, [FromQuery] int pageSize = 10,
+        [FromQuery] int pageNumber = 1)
     {
         var query = new GetGroupDetailsQuery()
         {
-            Id = id
+            Id = id,
+            PageNumber = pageNumber,
+            PageSize = pageSize
         };
-        
+
         var result = await _mediator.Send(query, cancellationToken);
-        
+
         return Ok(result);
     }
 }

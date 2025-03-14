@@ -16,9 +16,18 @@ public class GradeRepository : IGradeRepository
         _context = context;
     }
 
-    public async Task<List<Grade>> GetGradesAsync(CancellationToken cancellationToken)
+    public async Task<EntityWithCountDto<Grade>> GetGradesAsync(int pageSize, int pageNumber,
+        CancellationToken cancellationToken)
     {
-        return await _context.Grades.ToListAsync(cancellationToken: cancellationToken);
+        var totalCount = await _context.Grades.CountAsync(cancellationToken);
+
+        var grades = await _context.Grades.Skip((pageNumber - 1) * pageSize).Take(pageSize)
+            .ToListAsync(cancellationToken: cancellationToken);
+        return new EntityWithCountDto<Grade>()
+        {
+            TotalCount = totalCount,
+            Data = grades
+        };
     }
 
     public async Task<Grade> GetGradeByIdAsync(Guid id, CancellationToken cancellationToken)
@@ -100,21 +109,27 @@ public class GradeRepository : IGradeRepository
         await _context.SaveChangesAsync(cancellationToken);
     }
 
-    public async Task<GradeDetailsDto> GetGradeDetailsAsync(Guid id, CancellationToken cancellationToken)
+    public async Task<GradeDetailsDto> GetGradeDetailsAsync(Guid id, int pageSize, int pageNumber,
+        CancellationToken cancellationToken)
     {
-        var grade = await GetGradeByIdAsync(id, cancellationToken);
+        var student =
+            await _context.Students
+                .SingleOrDefaultAsync(s => s.Grades.Any(g => g.Id == id), cancellationToken) ??
+            throw new NotFoundException("Student not found");
 
-        var student = await _context.Students.SingleOrDefaultAsync(s => s.Grades.Contains(grade), cancellationToken) ??
-                      throw new NotFoundException("Student not found");
+        var teacher =
+            await _context.Teachers
+                .SingleOrDefaultAsync(t => t.Grades.Any(g => g.Id == id), cancellationToken) ??
+            throw new NotFoundException("Teacher not found");
 
-        var teacher = await _context.Teachers.SingleOrDefaultAsync(t => t.Grades.Contains(grade), cancellationToken) ??
-                      throw new NotFoundException("Teacher not found");
-
-        var subject = await _context.Subjects.SingleOrDefaultAsync(s => s.Grades.Contains(grade), cancellationToken) ??
-                      throw new NotFoundException("Subject not found");
+        var subject =
+            await _context.Subjects
+                .SingleOrDefaultAsync(s => s.Grades.Any(g => g.Id == id), cancellationToken) ??
+            throw new NotFoundException("Subject not found");
 
         var statement =
-            await _context.Statements.SingleOrDefaultAsync(s => s.Grades.Contains(grade), cancellationToken) ??
+            await _context.Statements
+                .SingleOrDefaultAsync(s => s.Grades.Any(g => g.Id == id), cancellationToken) ??
             throw new NotFoundException("Statement not found");
 
         return new GradeDetailsDto()

@@ -16,6 +16,6 @@ public class GetInstituteDetailsQueryHandler : IRequestHandler<GetInstituteDetai
 
     public Task<InstituteDetailsDto> Handle(GetInstituteDetailsQuery request, CancellationToken cancellationToken)
     {
-        return _instituteRepository.GetInstituteDetailsAsync(request.Id, cancellationToken);
+        return _instituteRepository.GetInstituteDetailsAsync(request.Id, request.PageSize, request.PageNumber, cancellationToken);
     }
 }

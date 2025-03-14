@@ -16,6 +16,6 @@ public class GetSubjectDetailsQueryHandler : IRequestHandler<GetSubjectDetailsQu
 
     public Task<SubjectDetailsDto> Handle(GetSubjectDetailsQuery request, CancellationToken cancellationToken)
     {
-        return _subjectRepository.GetSubjectDetailsAsync(request.Id, cancellationToken);
+        return _subjectRepository.GetSubjectDetailsAsync(request.Id, request.PageSize, request.PageNumber, cancellationToken);
     }
 }

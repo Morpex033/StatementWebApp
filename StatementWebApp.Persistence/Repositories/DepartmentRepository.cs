@@ -16,9 +16,18 @@ public class DepartmentRepository : IDepartmentRepository
         _context = context;
     }
 
-    public async Task<List<Department>> GetDepartmentsAsync(CancellationToken cancellationToken)
+    public async Task<EntityWithCountDto<Department>> GetDepartmentsAsync(int pageSize, int pageNumber,
+        CancellationToken cancellationToken)
     {
-        return await _context.Departments.ToListAsync(cancellationToken);
+        var totalCount = await _context.Departments.CountAsync(cancellationToken);
+
+        var departments = await _context.Departments.Skip((pageNumber - 1) * pageSize).Take(pageSize)
+            .ToListAsync(cancellationToken);
+        return new EntityWithCountDto<Department>()
+        {
+            TotalCount = totalCount,
+            Data = departments
+        };
     }
 
     public async Task<Department> GetDepartmentByIdAsync(Guid id, CancellationToken cancellationToken)
@@ -31,27 +40,41 @@ public class DepartmentRepository : IDepartmentRepository
         return department;
     }
 
-    public async Task<DepartmentDetailsDto> GetDepartmentDetailsAsync(Guid id, CancellationToken cancellationToken)
+    public async Task<DepartmentDetailsDto> GetDepartmentDetailsAsync(Guid id, int pageSize, int pageNumber,
+        CancellationToken cancellationToken)
     {
-        var department = await GetDepartmentByIdAsync(id, cancellationToken);
-
         var institute =
-            await _context.Institutes.SingleOrDefaultAsync(x => x.Departments.Contains(department),
-                cancellationToken) ?? throw new NotFoundException("Institute not found");
+            await _context.Institutes
+                .SingleOrDefaultAsync(x => x.Departments.Any(d => d.Id == id), cancellationToken) ??
+            throw new NotFoundException("Institute not found");
 
         var groups =
-            await _context.Groups.Where(g => g.Department == department).ToListAsync(cancellationToken) ??
+            await _context.Groups
+                .Where(g => g.DepartmentId == id)
+                .Skip((pageNumber - 1) * pageSize).Take(pageSize)
+                .ToListAsync(cancellationToken) ??
             throw new NotFoundException("Group not found");
 
         var teachers =
-            await _context.Teachers.Where(t => t.Departments.Contains(department)).ToListAsync(cancellationToken) ??
+            await _context.Teachers
+                .Where(t => t.Departments.Any(d => d.Id == id))
+                .Skip((pageNumber - 1) * pageSize).Take(pageSize)
+                .ToListAsync(cancellationToken) ??
             throw new NotFoundException("Teacher not found");
 
         return new DepartmentDetailsDto()
         {
             Institute = institute,
-            Groups = groups,
-            Teachers = teachers
+            Groups = new EntityWithCountDto<Group>()
+            {
+                Data = groups,
+                TotalCount = groups.Count
+            },
+            Teachers = new EntityWithCountDto<Teacher>()
+            {
+                Data = teachers,
+                TotalCount = teachers.Count
+            }
         };
     }
 }

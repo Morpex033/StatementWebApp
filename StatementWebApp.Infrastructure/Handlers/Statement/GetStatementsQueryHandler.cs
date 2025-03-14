@@ -1,10 +1,11 @@
 using MediatR;
+using StatementWebApp.Core.Dto;
 using StatementWebApp.Core.Interface;
 using StatementWebApp.Infrastructure.Query.Statement;
 
 namespace StatementWebApp.Infrastructure.Handlers.Statement;
 
-public class GetStatementsQueryHandler : IRequestHandler<GetStatementsQuery, List<Core.Entity.Statement>>
+public class GetStatementsQueryHandler : IRequestHandler<GetStatementsQuery, EntityWithCountDto<Core.Entity.Statement>>
 {
     private readonly IStatementRepository _statementRepository;
 
@@ -13,8 +14,8 @@ public class GetStatementsQueryHandler : IRequestHandler<GetStatementsQuery, Lis
         _statementRepository = statementRepository;
     }
 
-    public Task<List<Core.Entity.Statement>> Handle(GetStatementsQuery request, CancellationToken cancellationToken)
+    public Task<EntityWithCountDto<Core.Entity.Statement>> Handle(GetStatementsQuery request, CancellationToken cancellationToken)
     {
-        return _statementRepository.GetAllStatementsAsync(cancellationToken);
+        return _statementRepository.GetAllStatementsAsync(request.PageSize, request.PageNumber, cancellationToken);
     }
 }

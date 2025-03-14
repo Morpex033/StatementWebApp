@@ -16,6 +16,6 @@ public class GetDepartmentDetailsQueryHandler : IRequestHandler<GetDepartmentDet
 
     public Task<DepartmentDetailsDto> Handle(GetDepartmentDetailsQuery request, CancellationToken cancellationToken)
     {
-        return _departmentRepository.GetDepartmentDetailsAsync(request.Id, cancellationToken);
+        return _departmentRepository.GetDepartmentDetailsAsync(request.Id, request.PageSize, request.PageNumber, cancellationToken);
     }
 }

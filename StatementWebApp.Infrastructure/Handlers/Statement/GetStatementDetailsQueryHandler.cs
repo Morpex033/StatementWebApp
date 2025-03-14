@@ -17,6 +17,6 @@ public class GetStatementDetailsQueryHandler : IRequestHandler<GetStatementDetai
 
     public Task<StatementDetailsDto> Handle(GetStatementDetailsQuery request, CancellationToken cancellationToken)
     {
-        return _statementRepository.GetStatementDetailsAsync(request.Id, cancellationToken);
+        return _statementRepository.GetStatementDetailsAsync(request.Id, request.PageSize, request.PageNumber, cancellationToken);
     }
 }
