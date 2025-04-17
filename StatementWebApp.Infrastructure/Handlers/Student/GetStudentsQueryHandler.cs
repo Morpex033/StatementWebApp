@@ -14,8 +14,10 @@ public class GetStudentsQueryHandler : IRequestHandler<GetStudentsQuery, EntityW
         _studentRepository = studentRepository;
     }
 
-    public Task<EntityWithCountDto<Core.Entity.Student>> Handle(GetStudentsQuery request, CancellationToken cancellationToken)
+    public Task<EntityWithCountDto<Core.Entity.Student>> Handle(GetStudentsQuery request,
+        CancellationToken cancellationToken)
     {
-        return _studentRepository.GetStudentsAsync(request.PageSize, request.PageNumber, cancellationToken);
+        return _studentRepository.GetStudentsAsync(request.PageSize, request.PageNumber, request.Name,
+            cancellationToken);
     }
 }

@@ -16,6 +16,6 @@ public class GetTeachersQueryHandler : IRequestHandler<GetTeachersQuery, EntityW
 
     public Task<EntityWithCountDto<Core.Entity.Teacher>> Handle(GetTeachersQuery request, CancellationToken cancellationToken)
     {
-        return _teacherRepository.GetTeachersAsync(request.PageSize, request.PageNumber, cancellationToken);
+        return _teacherRepository.GetTeachersAsync(request.PageSize, request.PageNumber, request.Name, cancellationToken);
     }
 }

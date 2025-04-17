@@ -17,18 +17,23 @@ public class StudentRepository : IStudentRepository
     }
 
 
-    public async Task<EntityWithCountDto<Student>> GetStudentsAsync(int pageSize, int pageNumber,
+    public async Task<EntityWithCountDto<Student>> GetStudentsAsync(int pageSize, int pageNumber, string name,
         CancellationToken cancellationToken)
     {
         var totalCount = await _context.Students.CountAsync(cancellationToken);
 
-        var students = await _context.Students.Skip((pageNumber - 1) * pageSize).Take(pageSize)
+        var students = await _context.Students
+            .Where(x => EF.Functions.ILike(x.FirstName, $"%{name}%") ||
+                        EF.Functions.ILike(x.LastName, $"%{name}%"))
+            .Skip((pageNumber - 1) * pageSize).Take(pageSize)
             .ToListAsync(cancellationToken: cancellationToken);
 
         return new EntityWithCountDto<Student>()
         {
             TotalCount = totalCount,
-            Data = students
+            Data = students,
+            PageNumber = pageNumber,
+            PageSize = pageSize
         };
     }
 
@@ -64,7 +69,9 @@ public class StudentRepository : IStudentRepository
             Subjects = new EntityWithCountDto<Subject>()
             {
                 Data = subjects,
-                TotalCount = subjects.Count
+                TotalCount = subjects.Count,
+                PageNumber = pageNumber,
+                PageSize = pageSize
             },
         };
     }

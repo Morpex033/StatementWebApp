@@ -26,7 +26,9 @@ public class DepartmentRepository : IDepartmentRepository
         return new EntityWithCountDto<Department>()
         {
             TotalCount = totalCount,
-            Data = departments
+            Data = departments,
+            PageNumber = pageNumber,
+            PageSize = pageSize
         };
     }
 
@@ -68,12 +70,16 @@ public class DepartmentRepository : IDepartmentRepository
             Groups = new EntityWithCountDto<Group>()
             {
                 Data = groups,
-                TotalCount = groups.Count
+                TotalCount = groups.Count,
+                PageNumber = pageNumber,
+                PageSize = pageSize
             },
             Teachers = new EntityWithCountDto<Teacher>()
             {
                 Data = teachers,
-                TotalCount = teachers.Count
+                TotalCount = teachers.Count,
+                PageNumber = pageNumber,
+                PageSize = pageSize
             }
         };
     }

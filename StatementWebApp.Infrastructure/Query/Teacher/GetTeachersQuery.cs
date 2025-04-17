@@ -7,4 +7,5 @@ public class GetTeachersQuery : IRequest<EntityWithCountDto<Core.Entity.Teacher>
 {
     public int PageNumber { get; set; }
     public int PageSize { get; set; }
+    public string Name { get; set; }
 }

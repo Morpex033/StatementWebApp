@@ -20,13 +20,16 @@ public class StudentController : ControllerBase
 
     [HttpGet]
     [SwaggerResponse(200, "Success", typeof(List<Student>))]
-    public async Task<IActionResult> GetStudents(CancellationToken cancellationToken, [FromQuery] int pageSize = 10,
-        [FromQuery] int pageNumber = 1)
+    public async Task<IActionResult> GetStudents(CancellationToken cancellationToken,
+        [FromQuery] int pageSize = 10,
+        [FromQuery] int pageNumber = 1, 
+        [FromQuery] string name = "")
     {
         var query = new GetStudentsQuery()
         {
             PageNumber = pageNumber,
-            PageSize = pageSize
+            PageSize = pageSize,
+            Name = name
         };
 
         var result = await _mediator.Send(query, cancellationToken);
@@ -50,7 +53,8 @@ public class StudentController : ControllerBase
 
     [HttpGet("{id:guid}/details")]
     [SwaggerResponse(200, "Success", typeof(StudentDetailsDto))]
-    public async Task<IActionResult> GetStudentDetails(Guid id, CancellationToken cancellationToken, [FromQuery] int pageSize = 10,
+    public async Task<IActionResult> GetStudentDetails(Guid id, CancellationToken cancellationToken,
+        [FromQuery] int pageSize = 10,
         [FromQuery] int pageNumber = 1)
     {
         var query = new GetStudentDetailsQuery()

@@ -28,12 +28,10 @@ public class Grade
     public virtual Subject Subject { get; set; }
 
     [ForeignKey("Statement")]
-    public Guid StatementId { get; set; }
+    public Guid? StatementId { get; set; }
 
     public virtual Statement Statement { get; set; }
-
-    [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-    public DateTime Date { get; }
+    public DateTime Date { get; set; } = DateTime.Now;
 
     public Grade()
     {

@@ -16,6 +16,6 @@ public class GetSubjectsQueryHandler : IRequestHandler<GetSubjectsQuery, EntityW
 
     public Task<EntityWithCountDto<Core.Entity.Subject>> Handle(GetSubjectsQuery request, CancellationToken cancellationToken)
     {
-        return _subjectRepository.GetSubjectsAsync(request.PageSize, request.PageNumber, cancellationToken);
+        return _subjectRepository.GetSubjectsAsync(request.PageSize, request.PageNumber, request.Name, cancellationToken);
     }
 }

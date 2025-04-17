@@ -21,12 +21,13 @@ public class TeacherController : ControllerBase
     [HttpGet]
     [SwaggerResponse(200, "Success", typeof(List<Teacher>))]
     public async Task<IActionResult> GetTeachers(CancellationToken cancellationToken, [FromQuery] int pageSize = 10,
-        [FromQuery] int pageNumber = 1)
+        [FromQuery] int pageNumber = 1, [FromQuery] string name = "")
     {
         var query = new GetTeachersQuery()
         {
             PageNumber = pageNumber,
-            PageSize = pageSize
+            PageSize = pageSize,
+            Name = name
         };
 
         var result = await _mediator.Send(query, cancellationToken);

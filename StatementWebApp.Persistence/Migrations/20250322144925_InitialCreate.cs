@@ -175,7 +175,8 @@ namespace StatementWebApp.Persistence.Migrations
                     TeacherId = table.Column<Guid>(type: "uuid", nullable: false),
                     StudentId = table.Column<Guid>(type: "uuid", nullable: false),
                     SubjectId = table.Column<Guid>(type: "uuid", nullable: false),
-                    StatementId = table.Column<Guid>(type: "uuid", nullable: false)
+                    StatementId = table.Column<Guid>(type: "uuid", nullable: true),
+                    Date = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -184,8 +185,7 @@ namespace StatementWebApp.Persistence.Migrations
                         name: "FK_Grades_Statements_StatementId",
                         column: x => x.StatementId,
                         principalTable: "Statements",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "Id");
                     table.ForeignKey(
                         name: "FK_Grades_Students_StudentId",
                         column: x => x.StudentId,

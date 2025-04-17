@@ -16,18 +16,23 @@ public class TeacherRepository : ITeacherRepository
         _context = context;
     }
 
-    public async Task<EntityWithCountDto<Teacher>> GetTeachersAsync(int pageSize, int pageNumber,
+    public async Task<EntityWithCountDto<Teacher>> GetTeachersAsync(int pageSize, int pageNumber, string name,
         CancellationToken cancellationToken)
     {
         var totalCount = await _context.Teachers.CountAsync(cancellationToken);
 
-        var teachers = await _context.Teachers.Skip((pageNumber - 1) * pageSize).Take(pageSize)
+        var teachers = await _context.Teachers
+            .Where(x => EF.Functions.ILike(x.FirstName, $"%{name}%") ||
+                        EF.Functions.ILike(x.LastName, $"%{name}%"))
+            .Skip((pageNumber - 1) * pageSize).Take(pageSize)
             .ToListAsync(cancellationToken: cancellationToken);
 
         return new EntityWithCountDto<Teacher>()
         {
             TotalCount = totalCount,
-            Data = teachers
+            Data = teachers,
+            PageNumber = pageNumber,
+            PageSize = pageSize
         };
     }
 
@@ -68,18 +73,34 @@ public class TeacherRepository : ITeacherRepository
             Departments = new EntityWithCountDto<Department>()
             {
                 Data = departments,
-                TotalCount = departments.Count
+                TotalCount = departments.Count,
+                PageNumber = pageNumber,
+                PageSize = pageSize
             },
             Subjects = new EntityWithCountDto<Subject>()
             {
                 Data = subjects,
-                TotalCount = subjects.Count
+                TotalCount = subjects.Count,
+                PageNumber = pageNumber,
+                PageSize = pageSize
             },
             Grades = new EntityWithCountDto<Grade>()
             {
                 Data = grades,
-                TotalCount = grades.Count
+                TotalCount = grades.Count,
+                PageNumber = pageNumber,
+                PageSize = pageSize
             }
         };
+    }
+
+    public async Task<List<Teacher>> GetTeachersByNameAsync(string name, CancellationToken cancellationToken)
+    {
+        var teachers = await _context.Teachers
+            .Where(x => EF.Functions.ILike(x.FirstName, $"{name}") ||
+                        EF.Functions.ILike(x.LastName, $"{name}"))
+            .ToListAsync(cancellationToken) ?? throw new NotFoundException("Teacher not found");
+
+        return teachers;
     }
 }

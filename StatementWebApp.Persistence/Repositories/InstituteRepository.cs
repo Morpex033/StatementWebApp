@@ -34,7 +34,9 @@ public class InstituteRepository : IInstituteRepository
         return new EntityWithCountDto<Institute>()
         {
             TotalCount = totalCount,
-            Data = institutes
+            Data = institutes,
+            PageNumber = pageNumber,
+            PageSize = pageSize
         };
     }
 
@@ -53,7 +55,9 @@ public class InstituteRepository : IInstituteRepository
             Departments = new EntityWithCountDto<Department>()
             {
                 Data = departments,
-                TotalCount = departments.Count
+                TotalCount = departments.Count,
+                PageNumber = pageNumber,
+                PageSize = pageSize
             }
         };
     }

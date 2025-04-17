@@ -26,7 +26,9 @@ public class GroupRepository : IGroupRepository
         return new EntityWithCountDto<Group>()
         {
             TotalCount = totalCount,
-            Data = groups
+            Data = groups,
+            PageNumber = pageNumber,
+            PageSize = pageSize
         };
     }
 
@@ -59,7 +61,9 @@ public class GroupRepository : IGroupRepository
             Students = new EntityWithCountDto<Student>()
             {
                 Data = students,
-                TotalCount = students.Count
+                TotalCount = students.Count,
+                PageNumber = pageNumber,
+                PageSize = pageSize
             }
         };
     }

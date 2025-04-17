@@ -16,18 +16,22 @@ public class SubjectRepository : ISubjectRepository
         _context = context;
     }
 
-    public async Task<EntityWithCountDto<Subject>> GetSubjectsAsync(int pageSize, int pageNumber, CancellationToken cancellationToken)
+    public async Task<EntityWithCountDto<Subject>> GetSubjectsAsync(int pageSize, int pageNumber, string name,
+        CancellationToken cancellationToken)
     {
         var totalCount = await _context.Subjects.CountAsync(cancellationToken);
-        
-        var subjects = await _context.Subjects.Skip((pageNumber - 1) * pageSize).Take(pageSize)
+
+        var subjects = await _context.Subjects.Where(x => EF.Functions.ILike(x.Name, $"%{name}%"))
+            .Skip((pageNumber - 1) * pageSize).Take(pageSize)
             .ToListAsync(cancellationToken: cancellationToken);
-        
+
         return new EntityWithCountDto<Subject>()
         {
             TotalCount = totalCount,
-            Data = subjects
-        }; 
+            Data = subjects,
+            PageNumber = pageNumber,
+            PageSize = pageSize
+        };
     }
 
     public async Task<Subject> GetSubjectByIdAsync(Guid id, CancellationToken cancellationToken)
@@ -40,7 +44,8 @@ public class SubjectRepository : ISubjectRepository
         return subject;
     }
 
-    public async Task<SubjectDetailsDto> GetSubjectDetailsAsync(Guid id, int pageSize, int pageNumber, CancellationToken cancellationToken)
+    public async Task<SubjectDetailsDto> GetSubjectDetailsAsync(Guid id, int pageSize, int pageNumber,
+        CancellationToken cancellationToken)
     {
         var teachers =
             await _context.Teachers
@@ -65,18 +70,33 @@ public class SubjectRepository : ISubjectRepository
             Teachers = new EntityWithCountDto<Teacher>()
             {
                 Data = teachers,
-                TotalCount = teachers.Count
+                TotalCount = teachers.Count,
+                PageNumber = pageNumber,
+                PageSize = pageSize,
             },
             Grades = new EntityWithCountDto<Grade>()
             {
                 Data = grades,
-                TotalCount = grades.Count
+                TotalCount = grades.Count,
+                PageNumber = pageNumber,
+                PageSize = pageSize
             },
             Students = new EntityWithCountDto<Student>()
             {
                 Data = students,
-                TotalCount = students.Count
+                TotalCount = students.Count,
+                PageNumber = pageNumber,
+                PageSize = pageSize
             }
         };
+    }
+
+    public async Task<List<Subject>> GetSubjectsByNameAsync(string name, CancellationToken cancellationToken)
+    {
+        var subjects = await _context.Subjects
+            .Where(x => EF.Functions.ILike(x.Name, $"{name}"))
+            .ToListAsync(cancellationToken) ?? throw new NotFoundException("Subject not found");
+
+        return subjects;
     }
 }

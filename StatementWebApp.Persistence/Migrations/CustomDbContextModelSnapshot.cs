@@ -63,7 +63,10 @@ namespace StatementWebApp.Persistence.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
-                    b.Property<Guid>("StatementId")
+                    b.Property<DateTime>("Date")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<Guid?>("StatementId")
                         .HasColumnType("uuid");
 
                     b.Property<Guid>("StudentId")
@@ -259,9 +262,7 @@ namespace StatementWebApp.Persistence.Migrations
                 {
                     b.HasOne("StatementWebApp.Core.Entity.Statement", "Statement")
                         .WithMany("Grades")
-                        .HasForeignKey("StatementId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("StatementId");
 
                     b.HasOne("StatementWebApp.Core.Entity.Student", "Student")
                         .WithMany("Grades")

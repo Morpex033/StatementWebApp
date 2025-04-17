@@ -21,11 +21,17 @@ public class StatementRepository : IStatementRepository
         try
         {
             var institute =
-                await _context.Institutes.Where(i => i.Id == instituteId).FirstOrDefaultAsync(cancellationToken) ??
+                await _context.Institutes
+                    .Where(i => i.Id == instituteId)
+                    .FirstOrDefaultAsync(cancellationToken) ??
                 throw new BadRequestException("Institute not found");
 
-            var grades = await _context.Grades.Where(g => g.Date.Year == DateTime.Now.Year)
+            var grades = await _context.Grades.Where(g =>
+                    g.Date.Year == DateTime.Now.Year &&
+                    g.Teacher.Departments.Any(d => d.InstituteId == institute.Id))
                 .ToListAsync(cancellationToken);
+
+            if (grades.Count == 0) throw new BadRequestException("Grades not found");
 
             var statementsCount = await _context.Statements.CountAsync(cancellationToken);
 
@@ -58,7 +64,9 @@ public class StatementRepository : IStatementRepository
         return new EntityWithCountDto<Statement>()
         {
             TotalCount = totalCount,
-            Data = statements
+            Data = statements,
+            PageNumber = pageNumber,
+            PageSize = pageSize
         };
     }
 
@@ -106,7 +114,9 @@ public class StatementRepository : IStatementRepository
             Grades = new EntityWithCountDto<Grade>()
             {
                 Data = grades,
-                TotalCount = grades.Count
+                TotalCount = grades.Count,
+                PageNumber = pageNumber,
+                PageSize = pageSize
             }
         };
     }
