@@ -25,6 +25,7 @@
 
     <ItemGroup>
       <ProjectReference Include="..\StatementWebApp.Core\StatementWebApp.Core.csproj" />
+      <ProjectReference Include="..\StatementWebApp.Infrastructure\StatementWebApp.Infrastructure.csproj" />
     </ItemGroup>
 
     <ItemGroup>

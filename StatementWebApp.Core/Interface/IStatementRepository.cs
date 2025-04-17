@@ -16,4 +16,6 @@ public interface IStatementRepository
     Task DeleteStatementByIdAsync(Guid id, CancellationToken cancellationToken);
     
     Task<StatementDetailsDto> GetStatementDetailsAsync(Guid id, int pageSize, int pageNumber, CancellationToken cancellationToken);
+    
+    Task<byte[]> GetStatementInExel(Guid id, CancellationToken cancellationToken);
 }

@@ -3,6 +3,7 @@ using StatementWebApp.Core.Dto;
 using StatementWebApp.Core.Entity;
 using StatementWebApp.Core.Exception;
 using StatementWebApp.Core.Interface;
+using StatementWebApp.Infrastructure.Utilities;
 using StatementWebApp.Persistence.Context;
 
 namespace StatementWebApp.Persistence.Repositories;
@@ -119,5 +120,33 @@ public class StatementRepository : IStatementRepository
                 PageSize = pageSize
             }
         };
+    }
+
+    public async Task<byte[]> GetStatementInExel(Guid id, CancellationToken cancellationToken)
+    {
+        try
+        {
+            var statement = await _context.Statements
+                                .Where(s => s.Id == id)
+                                .Include(s => s.Grades) // Включаем оценки
+                                .ThenInclude(g => g.Student) // Включаем студентов
+                                .ThenInclude(s => s.Group) // Включаем группы студентов
+                                .Include(s => s.Grades) // Включаем оценки
+                                .ThenInclude(g => g.Subject)
+                                .FirstOrDefaultAsync(cancellationToken) ??
+                            throw new NotFoundException("Statement not found");
+
+            var bytes = ExelGenerator.GenerateExel(statement);
+
+            return bytes;
+        }
+        catch (Exception ex)
+        {
+            // лог в консоль
+            Console.WriteLine("💥 Ошибка при генерации Excel:");
+            Console.WriteLine(ex.Message);
+            Console.WriteLine(ex.StackTrace);
+            throw;
+        }
     }
 }
