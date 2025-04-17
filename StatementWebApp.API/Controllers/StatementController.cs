@@ -4,6 +4,7 @@ using StatementWebApp.Core.Dto;
 using StatementWebApp.Core.Entity;
 using StatementWebApp.Infrastructure.Command.Statement;
 using StatementWebApp.Infrastructure.Query.Statement;
+using StatementWebApp.Infrastructure.Utilities;
 using Swashbuckle.AspNetCore.Annotations;
 
 namespace StatementWebApp.Controllers;
@@ -95,7 +96,8 @@ public class StatementController : ControllerBase
 
     [HttpGet("{id:guid}/details")]
     [SwaggerResponse(200, "Success", typeof(StatementDetailsDto))]
-    public async Task<IActionResult> GetStatementDetails(Guid id, CancellationToken cancellationToken, [FromQuery] int pageSize = 10,
+    public async Task<IActionResult> GetStatementDetails(Guid id, CancellationToken cancellationToken,
+        [FromQuery] int pageSize = 10,
         [FromQuery] int pageNumber = 1)
     {
         var query = new GetStatementDetailsQuery()
@@ -108,5 +110,21 @@ public class StatementController : ControllerBase
         var result = await _mediator.Send(query, cancellationToken);
 
         return Ok(result);
+    }
+
+    [HttpGet("{id:guid}/exel")]
+    [SwaggerResponse(200, "Success", typeof(File))]
+    public async Task<IActionResult> GetStatementExel(Guid id, CancellationToken cancellationToken)
+    {
+        var statement = new GetStatementInExelByIdQuery()
+        {
+            Id = id
+        };
+
+        var result = await _mediator.Send(statement, cancellationToken);
+
+        return File(result,
+            "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+            "statement.xlsx");
     }
 }

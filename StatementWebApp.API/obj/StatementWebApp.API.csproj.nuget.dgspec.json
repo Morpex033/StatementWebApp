@@ -50,6 +50,10 @@
         "net8.0": {
           "targetAlias": "net8.0",
           "dependencies": {
+            "EPPlus": {
+              "target": "Package",
+              "version": "[8.0.2, )"
+            },
             "MediatR": {
               "target": "Package",
               "version": "[11.1.0, )"
@@ -195,6 +199,10 @@
         "net8.0": {
           "targetAlias": "net8.0",
           "dependencies": {
+            "EPPlus": {
+              "target": "Package",
+              "version": "[8.0.2, )"
+            },
             "MediatR": {
               "target": "Package",
               "version": "[11.1.0, )"
@@ -248,6 +256,9 @@
             "projectReferences": {
               "D:\\Rider project\\StatementWebApp\\StatementWebApp.Core\\StatementWebApp.Core.csproj": {
                 "projectPath": "D:\\Rider project\\StatementWebApp\\StatementWebApp.Core\\StatementWebApp.Core.csproj"
+              },
+              "D:\\Rider project\\StatementWebApp\\StatementWebApp.Infrastructure\\StatementWebApp.Infrastructure.csproj": {
+                "projectPath": "D:\\Rider project\\StatementWebApp\\StatementWebApp.Infrastructure\\StatementWebApp.Infrastructure.csproj"
               }
             }
           }
