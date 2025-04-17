@@ -20,7 +20,7 @@ public class StatementController : ControllerBase
         _mediator = mediator;
     }
 
-    [HttpPost]
+    [HttpPost("institute/{instituteId:guid}")]
     [SwaggerResponse(200, "Success", typeof(Statement))]
     public async Task<IActionResult> CreateStatement(Guid instituteId, CancellationToken cancellationToken)
     {
@@ -112,7 +112,7 @@ public class StatementController : ControllerBase
         return Ok(result);
     }
 
-    [HttpGet("{id:guid}/exel")]
+    [HttpGet("{id:guid}/excel")]
     [SwaggerResponse(200, "Success", typeof(File))]
     public async Task<IActionResult> GetStatementExel(Guid id, CancellationToken cancellationToken)
     {

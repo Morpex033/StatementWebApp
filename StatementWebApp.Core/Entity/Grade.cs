@@ -31,7 +31,7 @@ public class Grade
     public Guid? StatementId { get; set; }
 
     public virtual Statement Statement { get; set; }
-    public DateTime Date { get; set; } = DateTime.Now;
+    public DateTime Date { get; set; }
 
     public Grade()
     {

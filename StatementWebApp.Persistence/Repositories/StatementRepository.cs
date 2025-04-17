@@ -19,39 +19,30 @@ public class StatementRepository : IStatementRepository
 
     public async Task<Statement> CreateStatementAsync(Guid instituteId, CancellationToken cancellationToken)
     {
-        try
-        {
-            var institute =
-                await _context.Institutes
-                    .Where(i => i.Id == instituteId)
-                    .FirstOrDefaultAsync(cancellationToken) ??
-                throw new BadRequestException("Institute not found");
+        var institute =
+            await _context.Institutes
+                .Where(i => i.Id == instituteId)
+                .FirstOrDefaultAsync(cancellationToken) ??
+            throw new BadRequestException("Institute not found");
 
-            var grades = await _context.Grades.Where(g =>
-                    g.Date.Year == DateTime.Now.Year &&
-                    g.Teacher.Departments.Any(d => d.InstituteId == institute.Id))
-                .ToListAsync(cancellationToken);
+        var grades = await _context.Grades.Where(g =>
+                g.Date.Year == DateTime.Now.Year &&
+                g.Teacher.Departments.Any(d => d.InstituteId == institute.Id))
+            .ToListAsync(cancellationToken);
 
-            if (grades.Count == 0) throw new BadRequestException("Grades not found");
+        if (grades.Count == 0) throw new BadRequestException("Grades not found");
 
-            var statementsCount = await _context.Statements.CountAsync(cancellationToken);
+        var statementsCount = await _context.Statements.CountAsync(cancellationToken);
 
-            var index = $"{institute.Name}-{DateTime.Now.Year}/{statementsCount + 1}";
+        var index = $"{institute.Name}-{DateTime.Now.Year}/{statementsCount + 1}";
 
-            var statement = new Statement(index, grades);
+        var statement = new Statement(index, grades);
 
-            _context.Statements.Add(statement);
+        _context.Statements.Add(statement);
 
-            await _context.SaveChangesAsync(cancellationToken);
+        await _context.SaveChangesAsync(cancellationToken);
 
-            return statement;
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"Ошибка: {ex.Message}");
-            Console.WriteLine($"StackTrace: {ex.StackTrace}");
-            throw; // Проброс ошибки для отладки
-        }
+        return statement;
     }
 
     public async Task<EntityWithCountDto<Statement>> GetAllStatementsAsync(int pageSize, int pageNumber,
@@ -124,29 +115,18 @@ public class StatementRepository : IStatementRepository
 
     public async Task<byte[]> GetStatementInExel(Guid id, CancellationToken cancellationToken)
     {
-        try
-        {
-            var statement = await _context.Statements
-                                .Where(s => s.Id == id)
-                                .Include(s => s.Grades) // Включаем оценки
-                                .ThenInclude(g => g.Student) // Включаем студентов
-                                .ThenInclude(s => s.Group) // Включаем группы студентов
-                                .Include(s => s.Grades) // Включаем оценки
-                                .ThenInclude(g => g.Subject)
-                                .FirstOrDefaultAsync(cancellationToken) ??
-                            throw new NotFoundException("Statement not found");
+        var statement = await _context.Statements
+                            .Where(s => s.Id == id)
+                            .Include(s => s.Grades) // Включаем оценки
+                            .ThenInclude(g => g.Student) // Включаем студентов
+                            .ThenInclude(s => s.Group) // Включаем группы студентов
+                            .Include(s => s.Grades) // Включаем оценки
+                            .ThenInclude(g => g.Subject)
+                            .FirstOrDefaultAsync(cancellationToken) ??
+                        throw new NotFoundException("Statement not found");
 
-            var bytes = ExelGenerator.GenerateExel(statement);
+        var bytes = ExelGenerator.GenerateExel(statement);
 
-            return bytes;
-        }
-        catch (Exception ex)
-        {
-            // лог в консоль
-            Console.WriteLine("💥 Ошибка при генерации Excel:");
-            Console.WriteLine(ex.Message);
-            Console.WriteLine(ex.StackTrace);
-            throw;
-        }
+        return bytes;
     }
 }

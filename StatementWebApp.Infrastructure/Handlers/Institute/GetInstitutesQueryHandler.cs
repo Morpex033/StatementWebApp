@@ -16,6 +16,6 @@ public class GetInstitutesQueryHandler : IRequestHandler<GetInstitutesQuery, Ent
 
     public Task<EntityWithCountDto<Core.Entity.Institute>> Handle(GetInstitutesQuery request, CancellationToken cancellationToken)
     {
-        return _instituteRepository.GetInstitutesAsync(request.PageSize, request.PageNumber, cancellationToken);
+        return _instituteRepository.GetInstitutesAsync(request.PageSize, request.PageNumber, request.Name, cancellationToken);
     }
 }

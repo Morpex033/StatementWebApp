@@ -55,7 +55,10 @@ public class GradeRepository : IGradeRepository
             await _context.Subjects.SingleOrDefaultAsync(subject => subject.Id == grade.SubjectId,
                 cancellationToken: cancellationToken) ?? throw new NotFoundException("Subject not found");
 
-        var newGrade = new Grade(grade, teacher, student, subject);
+        var newGrade = new Grade(grade, teacher, student, subject)
+        {
+            Date = DateTime.UtcNow
+        };
 
         _context.Grades.Add(newGrade);
 

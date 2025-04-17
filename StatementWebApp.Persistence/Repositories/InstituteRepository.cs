@@ -24,12 +24,14 @@ public class InstituteRepository : IInstituteRepository
         return institute;
     }
 
-    public async Task<EntityWithCountDto<Institute>> GetInstitutesAsync(int pageSize, int pageNumber,
+    public async Task<EntityWithCountDto<Institute>> GetInstitutesAsync(int pageSize, int pageNumber, string name,
         CancellationToken cancellationToken)
     {
         var totalCount = await _context.Institutes.CountAsync(cancellationToken);
 
-        var institutes = await _context.Institutes.Skip((pageNumber - 1) * pageSize).Take(pageSize)
+        var institutes = await _context.Institutes
+            .Where(i => EF.Functions.ILike(i.Name, $"%{name}%"))
+            .Skip((pageNumber - 1) * pageSize).Take(pageSize)
             .ToListAsync(cancellationToken);
         return new EntityWithCountDto<Institute>()
         {

@@ -32,12 +32,13 @@ public class InstituteController : ControllerBase
     [HttpGet]
     [SwaggerResponse(200, "Success", typeof(List<Institute>))]
     public async Task<IActionResult> GetInstitutes(CancellationToken cancellationToken, [FromQuery] int pageSize = 10,
-        [FromQuery] int pageNumber = 1)
+        [FromQuery] int pageNumber = 1, [FromQuery] string name = "")
     {
         var query = new GetInstitutesQuery()
         {
             PageSize = pageSize,
-            PageNumber = pageNumber
+            PageNumber = pageNumber,
+            Name = name
         };
 
         var result = await _mediator.Send(query, cancellationToken);
