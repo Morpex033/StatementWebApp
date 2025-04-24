@@ -6,5 +6,5 @@ public class UpdateStatementDto
 {
     public string Index { get; set; }
     
-    public List<Grade> Grades { get; set; }
+    public List<GradeDto> Grades { get; set; }
 }

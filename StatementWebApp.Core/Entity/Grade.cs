@@ -12,23 +12,19 @@ public class Grade
 
     public int Value { get; set; }
 
-    [ForeignKey("Teacher")]
-    public Guid TeacherId { get; set; }
+    [ForeignKey("Teacher")] public Guid TeacherId { get; set; }
 
     public virtual Teacher Teacher { get; set; }
 
-    [ForeignKey("Student")]
-    public Guid StudentId { get; set; }
+    [ForeignKey("Student")] public Guid StudentId { get; set; }
 
     public virtual Student Student { get; set; }
 
-    [ForeignKey("Subject")]
-    public Guid SubjectId { get; set; }
+    [ForeignKey("Subject")] public Guid SubjectId { get; set; }
 
     public virtual Subject Subject { get; set; }
 
-    [ForeignKey("Statement")]
-    public Guid? StatementId { get; set; }
+    [ForeignKey("Statement")] public Guid? StatementId { get; set; }
 
     public virtual Statement Statement { get; set; }
     public DateTime Date { get; set; }
@@ -57,5 +53,16 @@ public class Grade
         Teacher = teacher;
         Student = student;
         Subject = subject;
+    }
+
+    public override string ToString()
+    {
+        return $"{{\n" +
+               $"  \"Id\": \"{Id}\",\n" +
+               $"  \"Value\": {Value},\n" +
+               $"  \"TeacherId\": \"{TeacherId}\",\n" +
+               $"  \"StudentId\": \"{StudentId}\",\n" +
+               $"  \"SubjectId\": \"{SubjectId}\"\n" +
+               $"}}";
     }
 }

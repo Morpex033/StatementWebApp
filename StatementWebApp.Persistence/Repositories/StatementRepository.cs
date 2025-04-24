@@ -32,7 +32,15 @@ public class StatementRepository : IStatementRepository
 
         if (grades.Count == 0) throw new BadRequestException("Grades not found");
 
-        var statementsCount = await _context.Statements.CountAsync(cancellationToken);
+        var statements = await _context.Statements
+            .Where(s => s.Index != null)
+            .ToListAsync(cancellationToken);
+
+        var statementsCount = statements
+            .Count(s => s.Index.Split('-')
+                            .Any(part => part.Equals(institute.Name, StringComparison.OrdinalIgnoreCase)) &&
+                        s.Index.Split('-', '/').Any(part => part == DateTime.Now.Year.ToString()));
+
 
         var index = $"{institute.Name}-{DateTime.Now.Year}/{statementsCount + 1}";
 
@@ -74,10 +82,19 @@ public class StatementRepository : IStatementRepository
     public async Task<Statement> UpdateStatementByIdAsync(Guid id, UpdateStatementDto updateStatementDto,
         CancellationToken cancellationToken)
     {
-        var statement = await _context.Statements.Where(s => s.Id == id).FirstOrDefaultAsync(cancellationToken) ??
+        var statement = await _context.Statements
+                            .Include(s => s.Grades)
+                            .Where(s => s.Id == id)
+                            .FirstOrDefaultAsync(cancellationToken) ??
                         throw new NotFoundException("Statement not found");
 
-        statement.Grades = updateStatementDto.Grades;
+        foreach (var oldGrade in statement.Grades)
+        {
+            var grade = updateStatementDto.Grades.FirstOrDefault(g => g.Id == oldGrade.Id);
+            if (grade == null) continue;
+
+            oldGrade.Value = grade.Value;
+        }
 
         await _context.SaveChangesAsync(cancellationToken);
 
@@ -86,10 +103,23 @@ public class StatementRepository : IStatementRepository
 
     public async Task DeleteStatementByIdAsync(Guid id, CancellationToken cancellationToken)
     {
-        var statement = await _context.Statements.Where(s => s.Id == id).FirstOrDefaultAsync(cancellationToken) ??
+        var statement = await _context.Statements
+                            .FirstOrDefaultAsync(s => s.Id == id, cancellationToken) ??
                         throw new NotFoundException("Statement not found");
 
+        var grades = await _context.Grades
+            .Where(g => g.StatementId == id)
+            .ToListAsync(cancellationToken);
+
+        foreach (var grade in grades)
+        {
+            grade.StatementId = null;
+        }
+
+
         _context.Statements.Remove(statement);
+
+        await _context.SaveChangesAsync(cancellationToken);
     }
 
     public async Task<StatementDetailsDto> GetStatementDetailsAsync(Guid id, int pageSize, int pageNumber,
@@ -125,7 +155,7 @@ public class StatementRepository : IStatementRepository
                             .FirstOrDefaultAsync(cancellationToken) ??
                         throw new NotFoundException("Statement not found");
 
-        var bytes = ExelGenerator.GenerateExel(statement);
+        var bytes = ExсelGenerator.GenerateExcel(statement);
 
         return bytes;
     }
